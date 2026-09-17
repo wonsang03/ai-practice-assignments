@@ -68,12 +68,32 @@ Study-01/
 │   ├── templates/index.html
 │   └── static/css, static/js
 │
+├── logs/                      # 학습 기록
+│   ├── analyze_log.py         #   로그 분석 스크립트
+│   ├── train_2026-09-17.log   #   학습 실행 기록
+│   └── analysis_2026-09-17.md #   분석 결과
+│
 ├── model/                     # 학습된 가중치 (실행 시 생성)
 └── data/                      # MNIST 원본 (최초 실행 시 자동 다운로드)
 ```
 
 `model/`과 `data/`는 용량이 크고 다시 만들 수 있으므로 깃에 올리지 않습니다
 (`.gitignore`). 내려받은 뒤 `run_desktop.bat`을 한 번 실행하면 자동 생성됩니다.
+
+## 파일 출처 — 무엇을 어디서 가져왔나
+
+| 대상 | 출처 | 어떻게 들어오나 |
+| --- | --- | --- |
+| MNIST 데이터 (`data/MNIST/`) | Yann LeCun 등이 공개한 MNIST 데이터베이스 (<http://yann.lecun.com/exdb/mnist/>), torchvision이 관리하는 미러에서 배포 | `train_model.py`의 `datasets.MNIST(..., download=True)`가 최초 실행 시 자동으로 내려받습니다 (약 55MB). 직접 받아 넣은 파일이 아닙니다. |
+| 학습된 가중치 (`model/mnist_cnn.pt`) | 이 저장소에서 직접 학습 | `python train_model.py`가 학습을 마치고 `torch.save()`로 만듭니다. 외부에서 받은 사전학습 모델이 아닙니다. |
+| 학습 기록 (`logs/train_*.log`) | 위 학습 실행의 콘솔 출력 | 학습을 돌린 터미널 출력을 그대로 옮기고 실행 환경 정보를 덧붙였습니다. |
+| 분석 결과 (`logs/analysis_*.md`) | `logs/analyze_log.py`의 출력 | `python logs/analyze_log.py --out logs/analysis_<날짜>.md` |
+| 라이브러리 (torch, torchvision, Pillow, numpy, flask) | PyPI | `pip install -r requirements.txt` |
+| Tkinter | Python 표준 라이브러리 | 파이썬 설치에 포함 (별도 설치 없음) |
+| 소스 코드 (`common/`, `desktop_version/`, `web_version/`, `train_model.py`) | 직접 작성 | 복사해 온 외부 코드는 없습니다. 모델 구조는 표준적인 2블록 CNN을 참고해 구현했습니다. |
+
+정리하면 **외부에서 들어오는 것은 MNIST 데이터와 pip 라이브러리뿐**이고,
+모델 가중치와 코드는 모두 이 저장소 안에서 만들어집니다.
 
 ## 어떻게 동작하나
 
@@ -87,11 +107,20 @@ Study-01/
 합성곱 블록 2개(32채널 → 64채널) + 완전연결층 2개로 구성했습니다.
 배치 정규화와 드롭아웃으로 과적합을 줄였습니다.
 
-**테스트 정확도 약 99%** (4 에폭, CPU 기준 약 3분)
+**테스트 정확도 99.15%** (3 에폭, CPU 기준 약 2분 30초 / 2026-09-17 재학습 기준)
 
 학습할 때는 이미지에 약간의 회전·이동·확대 변형을 무작위로 줍니다. 마우스로 그린
 글씨는 MNIST 원본보다 거칠기 때문에, 변형을 섞어 학습해야 실제 입력에 잘
 견딥니다.
+
+학습 과정은 `logs/train_2026-09-17.log`에 남겨 두었고, 에폭별 손실·정확도 변화를
+정리한 분석은 `logs/analysis_2026-09-17.md`에 있습니다. 다시 학습한 뒤에는
+
+```bash
+python logs/analyze_log.py --out logs/analysis_<날짜>.md
+```
+
+로 같은 형식의 분석을 새로 만들 수 있습니다.
 
 ### 3. 전처리 — 이 부분이 정확도를 좌우합니다
 
