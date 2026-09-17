@@ -1,8 +1,8 @@
-"""Desktop handwritten digit recognizer (Tkinter).
+"""데스크톱 손글씨 숫자 인식기 (Tkinter).
 
 Created: 2025-09-15
-Draw a digit from 0 to 9 with the mouse, press [Recognize], and the trained CNN
-reports the predicted digit together with its confidence.
+마우스로 0~9 숫자를 그리고 [Recognize]를 누르면, 학습된 CNN이 예측한 숫자와
+신뢰도를 함께 보여 준다.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from tkinter import messagebox
 
 from PIL import Image, ImageDraw
 
-# Allow running this file directly from the desktop_version folder.
+# desktop_version 폴더에서 이 파일을 직접 실행해도 동작하게 한다.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -22,11 +22,11 @@ if str(PROJECT_ROOT) not in sys.path:
 from common.model import MODEL_PATH, load_model  # noqa: E402
 from common.preprocess import predict_digit  # noqa: E402
 
-# Canvas geometry and drawing settings.
+# 캔버스 크기와 그리기 설정.
 CANVAS_SIZE = 280
 BRUSH_RADIUS = 11
 
-# Colour palette.
+# 색상 팔레트.
 BG_COLOR = "#1e1e2e"
 PANEL_COLOR = "#282a36"
 CANVAS_BG = "#ffffff"
@@ -37,7 +37,7 @@ MUTED_COLOR = "#6272a4"
 
 
 class DigitRecognizerApp:
-    """Tkinter window holding the drawing canvas and the prediction panel."""
+    """그리기 캔버스와 예측 패널을 담은 Tkinter 창."""
 
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
@@ -47,9 +47,9 @@ class DigitRecognizerApp:
 
         self.model = self._load_model_or_exit()
 
-        # Off-screen image that mirrors every stroke drawn on the canvas.
-        # Reading pixels back from the canvas widget is not portable, so each
-        # stroke is recorded twice: once for the user, once for the model.
+        # 캔버스에 그린 획을 그대로 따라 그리는 오프스크린 이미지.
+        # Tk 캔버스 위젯에서 픽셀을 다시 읽어올 이식성 있는 방법이 없어서,
+        # 모든 획을 두 번 그린다. 한 번은 사용자용, 한 번은 모델용이다.
         self.image = Image.new("L", (CANVAS_SIZE, CANVAS_SIZE), color=255)
         self.draw = ImageDraw.Draw(self.image)
 
@@ -59,10 +59,10 @@ class DigitRecognizerApp:
         self._build_widgets()
 
     # ------------------------------------------------------------------
-    # Set-up
+    # 초기 설정
     # ------------------------------------------------------------------
     def _load_model_or_exit(self):
-        """Load the checkpoint, or show an error dialog and quit."""
+        """체크포인트를 읽는다. 없으면 오류 창을 띄우고 종료한다."""
         try:
             return load_model()
         except FileNotFoundError:
@@ -76,7 +76,7 @@ class DigitRecognizerApp:
             sys.exit(1)
 
     def _build_widgets(self) -> None:
-        """Create every widget in the window."""
+        """창 안의 위젯을 모두 만든다."""
         title = tk.Label(
             self.root,
             text="Handwritten Digit Recognition",
@@ -95,7 +95,7 @@ class DigitRecognizerApp:
         )
         subtitle.grid(row=1, column=0, columnspan=2, pady=(0, 14))
 
-        # Drawing canvas.
+        # 그리기 캔버스.
         self.canvas = tk.Canvas(
             self.root,
             width=CANVAS_SIZE,
@@ -111,7 +111,7 @@ class DigitRecognizerApp:
         self.canvas.bind("<B1-Motion>", self._on_drag)
         self.canvas.bind("<ButtonRelease-1>", self._on_release)
 
-        # Result panel on the right.
+        # 오른쪽 결과 패널.
         panel = tk.Frame(self.root, bg=PANEL_COLOR, width=210, height=CANVAS_SIZE)
         panel.grid(row=2, column=1, padx=(11, 22), pady=6, sticky="nsew")
         panel.grid_propagate(False)
@@ -160,7 +160,7 @@ class DigitRecognizerApp:
         )
         self.top3_label.pack(pady=(4, 0))
 
-        # Buttons.
+        # 버튼.
         button_row = tk.Frame(self.root, bg=BG_COLOR)
         button_row.grid(row=3, column=0, columnspan=2, pady=(12, 20))
 
@@ -192,12 +192,12 @@ class DigitRecognizerApp:
             command=self.recognize,
         ).pack(side="left", padx=8)
 
-        # Keyboard shortcuts: Enter recognizes, Escape clears.
+        # 단축키: Enter는 인식, Esc는 지우기.
         self.root.bind("<Return>", lambda event: self.recognize())
         self.root.bind("<Escape>", lambda event: self.clear_canvas())
 
     # ------------------------------------------------------------------
-    # Drawing
+    # 그리기
     # ------------------------------------------------------------------
     def _on_press(self, event: tk.Event) -> None:
         self.last_point = (event.x, event.y)
@@ -214,7 +214,7 @@ class DigitRecognizerApp:
         self.last_point = None
 
     def _paint(self, x1: int, y1: int, x2: int, y2: int) -> None:
-        """Draw one stroke segment on both the canvas and the shadow image."""
+        """획 한 토막을 캔버스와 오프스크린 이미지에 똑같이 그린다."""
         self.canvas.create_line(
             x1,
             y1,
@@ -227,7 +227,7 @@ class DigitRecognizerApp:
         )
         self.draw.line([(x1, y1), (x2, y2)], fill=0, width=BRUSH_RADIUS * 2)
 
-        # Round off the joints so fast strokes do not look segmented.
+        # 이음새를 둥글게 메운다. 빠르게 그을 때 선이 마디져 보이지 않게 한다.
         self.draw.ellipse(
             [
                 x2 - BRUSH_RADIUS,
@@ -241,10 +241,10 @@ class DigitRecognizerApp:
         self.has_drawing = True
 
     # ------------------------------------------------------------------
-    # Actions
+    # 동작
     # ------------------------------------------------------------------
     def clear_canvas(self) -> None:
-        """Erase the drawing and reset the result panel."""
+        """그림을 지우고 결과 패널을 초기화한다."""
         self.canvas.delete("all")
         self.draw.rectangle([0, 0, CANVAS_SIZE, CANVAS_SIZE], fill=255)
         self.has_drawing = False
@@ -255,7 +255,7 @@ class DigitRecognizerApp:
         self.top3_label.config(text="-")
 
     def recognize(self) -> None:
-        """Run the model on the current drawing and show the result."""
+        """지금 그려진 그림을 모델에 넣고 결과를 표시한다."""
         if not self.has_drawing:
             messagebox.showinfo("Empty canvas", "Draw a digit first.")
             return

@@ -1,13 +1,13 @@
-"""Train the MNIST digit classifier used by both front ends.
+"""두 프런트엔드가 함께 쓰는 MNIST 숫자 분류기를 학습한다.
 
 Created: 2025-09-15
-Usage:
-    python train_model.py                # train with the default settings
-    python train_model.py --epochs 5     # train longer for a better score
-    python train_model.py --force        # retrain even if a checkpoint exists
+사용법:
+    python train_model.py                # 기본 설정으로 학습
+    python train_model.py --epochs 5     # 더 오래 학습해 정확도를 올린다
+    python train_model.py --force        # 체크포인트가 있어도 다시 학습
 
-The trained weights are written to model/mnist_cnn.pt, which the desktop and
-web versions load at start-up.
+학습한 가중치는 model/mnist_cnn.pt에 저장되고, 데스크톱 버전과 웹 버전이
+시작할 때 이 파일을 읽는다.
 """
 
 from __future__ import annotations
@@ -28,11 +28,11 @@ DATA_DIR = PROJECT_ROOT / "data"
 
 
 def build_dataloaders(batch_size: int) -> tuple[DataLoader, DataLoader]:
-    """Download MNIST if needed and return the training and test loaders.
+    """필요하면 MNIST를 내려받고 학습·테스트 로더를 만든다.
 
-    Light random affine jitter is applied to the training split only. Digits
-    drawn with a mouse are rarely as tidy as MNIST samples, and the jitter makes
-    the model noticeably more forgiving of that.
+    약한 랜덤 affine 변형은 학습 split에만 준다. 마우스로 그린 숫자는 MNIST
+    샘플만큼 단정한 경우가 드물어서, 변형을 섞어 학습해야 실제 입력에 눈에 띄게
+    너그러워진다.
     """
     train_transform = transforms.Compose(
         [
@@ -70,7 +70,7 @@ def train_one_epoch(
     device: torch.device,
     epoch: int,
 ) -> float:
-    """Run a single training epoch and return the average loss."""
+    """한 에폭을 학습하고 평균 손실을 돌려준다."""
     model.train()
     running_loss = 0.0
     batches = len(loader)
@@ -85,6 +85,8 @@ def train_one_epoch(
 
         running_loss += loss.item()
 
+        # 여기서 찍는 값은 에폭 처음부터의 누적 평균이다. 구간별 실제 손실이
+        # 궁금하면 logs/analyze_log.py가 평균을 되돌려 계산해 준다.
         if index % 100 == 0 or index == batches:
             print(
                 f"  epoch {epoch} | batch {index:>4}/{batches} | "
@@ -96,7 +98,7 @@ def train_one_epoch(
 
 
 def evaluate(model: nn.Module, loader: DataLoader, device: torch.device) -> float:
-    """Return the accuracy on the test split as a percentage."""
+    """테스트 split에 대한 정확도를 퍼센트로 돌려준다."""
     model.eval()
     correct = 0
     total = 0
@@ -121,8 +123,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    # The launchers call this script every time, so skip the work when the
-    # model is already on disk.
+    # .bat 실행 파일이 매번 이 스크립트를 부르므로, 모델이 이미 있으면 건너뛴다.
     if MODEL_PATH.exists() and not args.force:
         print(f"Model already exists at '{MODEL_PATH}'. Use --force to retrain.")
         return
@@ -140,6 +141,7 @@ def main() -> None:
     model = DigitCNN().to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+    # 에폭마다 학습률을 0.7배로 줄여, 뒤로 갈수록 미세 조정만 하게 한다.
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.7)
 
     started = time.time()

@@ -1,7 +1,7 @@
 @echo off
 REM Created: 2025-09-15
-REM Double-click this file to train the model (first run only) and open the
-REM desktop handwritten digit recognizer.
+REM 이 파일을 더블 클릭하면 (최초 1회) 모델을 학습한 뒤 데스크톱 손글씨 숫자
+REM 인식기를 띄운다. echo로 찍는 문구는 콘솔 코드페이지 문제로 영어로 둔다.
 
 setlocal
 cd /d "%~dp0"

@@ -1,7 +1,8 @@
 @echo off
 REM Created: 2025-09-15
-REM Double-click this file to train the model (first run only), start the Flask
-REM server and open the web handwritten digit recognizer in a browser.
+REM 이 파일을 더블 클릭하면 (최초 1회) 모델을 학습하고, Flask 서버를 띄운 뒤
+REM 브라우저로 웹 손글씨 숫자 인식기를 연다. echo 문구는 콘솔 코드페이지 문제로
+REM 영어로 둔다.
 
 setlocal
 cd /d "%~dp0"
@@ -42,8 +43,8 @@ echo.
 echo [2/2] Starting the Flask server. The browser opens once it is ready.
 echo       Press Ctrl+C to stop it.
 echo.
-REM The server opens the browser itself: a browser launched from here raced
-REM ahead of model loading and landed on a connection-refused page.
+REM 브라우저는 서버가 직접 연다. 여기서 먼저 열면 모델 로딩을 앞질러서
+REM 연결 거부 페이지가 뜬다.
 python web_version\app.py --open-browser
 if errorlevel 1 (
     echo.

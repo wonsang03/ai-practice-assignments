@@ -1,4 +1,4 @@
-/* Created: 2025-09-15 | Styles for the web digit recognizer */
+/* Created: 2025-09-15 | 웹 숫자 인식기 스타일 */
 
 :root {
   --bg: #1e1e2e;
@@ -67,7 +67,7 @@ body {
   border: 2px solid var(--accent);
   border-radius: 10px;
   cursor: crosshair;
-  touch-action: none; /* Let a finger draw instead of scrolling the page. */
+  touch-action: none; /* 손가락으로 페이지를 넘기는 대신 그림이 그려지게 한다. */
   max-width: 100%;
 }
 
@@ -155,7 +155,7 @@ body {
   height: 84px;
   background: #000000;
   border-radius: 6px;
-  image-rendering: pixelated; /* Show the 28x28 grid, not a blurry upscale. */
+  image-rendering: pixelated; /* 흐릿하게 확대하지 말고 28x28 격자를 그대로 보여 준다. */
   visibility: hidden;
 }
 

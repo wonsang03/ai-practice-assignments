@@ -1,5 +1,5 @@
 /* Created: 2025-09-15
- * Canvas drawing plus calls to the /predict endpoint.
+ * 캔버스 그리기와 /predict 엔드포인트 호출.
  */
 
 (function () {
@@ -19,7 +19,7 @@
   var isDrawing = false;
   var hasDrawing = false;
 
-  // The canvas starts white so it matches the desktop version exactly.
+  // 데스크톱 버전과 입력을 정확히 맞추려고 캔버스를 흰색으로 시작한다.
   function resetCanvas() {
     context.fillStyle = "#ffffff";
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -31,8 +31,8 @@
   context.strokeStyle = "#000000";
   resetCanvas();
 
-  // Translate a mouse or touch event into canvas coordinates. The canvas can be
-  // scaled down by CSS on small screens, so the ratio has to be applied.
+  // 마우스·터치 이벤트를 캔버스 좌표로 옮긴다. 작은 화면에서는 CSS가 캔버스를
+  // 축소할 수 있으므로 그 비율을 반영해야 한다.
   function pointFromEvent(event) {
     var rect = canvas.getBoundingClientRect();
     var source = event.touches && event.touches.length ? event.touches[0] : event;
@@ -51,7 +51,7 @@
     context.beginPath();
     context.moveTo(point.x, point.y);
 
-    // A single tap should leave a dot, not nothing.
+    // 한 번 톡 찍었을 때도 아무것도 아닌 대신 점 하나는 남아야 한다.
     context.lineTo(point.x + 0.01, point.y + 0.01);
     context.stroke();
   }
@@ -126,8 +126,8 @@
   }
 
   function recognize() {
-    // Enter also triggers a click on the focused Recognize button, so the
-    // disabled flag is checked here too and not only on the button.
+    // Enter를 누르면 포커스된 Recognize 버튼의 클릭도 함께 일어난다. 그래서
+    // 버튼에만 맡기지 않고 여기서도 disabled 여부를 확인한다.
     if (recognizeButton.disabled) {
       return;
     }
