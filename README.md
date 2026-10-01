@@ -4,4 +4,5 @@
 
 | 폴더 | 내용 |
 | --- | --- |
-| [`mnist-digit-recognition/`](mnist-digit-recognition/) | 03. 손글씨 인식 프로그램 (MNIST, 데스크톱 + 웹) |
+| [`Study-01/`](Study-01/) | 03. 손글씨 인식 프로그램 (MNIST, 데스크톱 + 웹) |
+| [`Study-02/`](Study-02/) | 04. 개인용 할 일 관리 애플리케이션 (순수 HTML·CSS·JS) |

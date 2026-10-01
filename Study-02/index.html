@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="매일의 할 일을 기록하고 카테고리와 달력으로 관리하는 개인용 할 일 앱">
+  <meta name="color-scheme" content="light dark">
+  <title>My Tasks · 할 일 관리</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234a3aa7'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <!-- 저장된 테마를 CSS보다 먼저 적용해서, 새로고침할 때 화면이 번쩍이지 않게 합니다. -->
+  <script>
+    try {
+      var saved = JSON.parse(localStorage.getItem('personal-todo/data') || '{}');
+      var theme = saved.settings && saved.settings.theme;
+      if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+    } catch (e) { /* 저장소를 못 쓰면 시스템 설정을 따릅니다. */ }
+  </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 아이콘 모음: 앱이 필요한 곳에 복사해서 씁니다. -->
+  <svg xmlns="http://www.w3.org/2000/svg" hidden>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 002 2h6a2 2 0 002-2l1-12M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.8 2.8 0 00-4-4L4 16v4zM13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></g></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6L6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></g></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></g></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4m0 0L7.5 8.5M12 4l4.5 4.5M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></g></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.5" cy="6.5" r="1" fill="currentColor"/><circle cx="4.5" cy="12" r="1" fill="currentColor"/><circle cx="4.5" cy="17.5" r="1" fill="currentColor"/></g></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 115 1c-.6 1-2.5 1.5-2.5 3"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></g></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 11-2.2-5.3M19.5 4v3.5H16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l9 16H3l9-16z"/><path d="M12 10v4"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></g></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h8.5L19 8v12.5H6z"/><path d="M14 3.5V8.5h5M9 12.5h6M9 16h6"/></g></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M20.5 16l-5-5-8.5 8.5"/></g></symbol>
+  </svg>
+
+  <a class="skip-link" href="#taskInput">할 일 입력으로 건너뛰기</a>
+
+  <div class="app">
+    <header class="app-header">
+      <div>
+        <p class="today" id="todayLabel"></p>
+        <h1>My Tasks</h1>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="icon-btn" id="helpBtn" aria-label="사용법과 단축키" title="사용법과 단축키 (?)">
+          <svg aria-hidden="true"><use href="#i-help"/></svg>
+        </button>
+        <button type="button" class="theme-toggle" id="themeBtn" role="switch" aria-checked="false" aria-label="다크 모드" title="다크 모드 전환 (Alt+T)">
+          <span class="theme-thumb">
+            <svg class="icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+            <svg class="icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+          </span>
+        </button>
+      </div>
+    </header>
+
+    <p class="banner" id="storageBanner" role="alert" hidden>
+      <svg aria-hidden="true"><use href="#i-alert"/></svg>
+      <span>이 브라우저에서는 저장소를 쓸 수 없어서, 새로고침하면 목록이 사라져요. <strong>내보내기</strong>로 따로 보관해 주세요.</span>
+    </p>
+
+    <!-- 요약 대시보드 -->
+    <section class="card dashboard" aria-labelledby="dashTitle">
+      <div class="section-head">
+        <h2 id="dashTitle">오늘의 요약</h2>
+        <button type="button" class="text-btn" id="dashToggle" aria-expanded="true" aria-controls="dashBody">
+          <span>접기</span><svg aria-hidden="true"><use href="#i-chevron"/></svg>
+        </button>
+      </div>
+
+      <div class="dash-body" id="dashBody">
+        <div class="dash-top">
+          <div class="ring-wrap" id="ringWrap" role="img" aria-label="전체 진행률 0%">
+            <svg class="ring" viewBox="0 0 80 80" aria-hidden="true">
+              <circle class="ring-track" cx="40" cy="40" r="34"/>
+              <circle class="ring-fill" id="ringFill" cx="40" cy="40" r="34"/>
+            </svg>
+            <div class="ring-label">
+              <strong id="ringPercent">0%</strong>
+              <span>진행률</span>
+            </div>
+          </div>
+          <div class="ring-caption">
+            <p class="ring-count" id="ringCount">0/0 완료</p>
+            <p class="ring-sub" id="ringSub">오늘 추가 0개</p>
+          </div>
+
+          <dl class="tiles">
+            <div class="tile"><dt>남은 할 일</dt><dd id="statRemaining">0</dd></div>
+            <div class="tile"><dt>오늘 완료</dt><dd id="statDoneToday">0</dd></div>
+            <div class="tile"><dt>오늘 마감</dt><dd id="statDueToday">0</dd></div>
+            <div class="tile tile-overdue" id="tileOverdue">
+              <dt><svg aria-hidden="true"><use href="#i-alert"/></svg>기한 지남</dt>
+              <dd id="statOverdue">0</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="cat-progress" id="catProgress" aria-label="카테고리별 진행률"></div>
+
+        <div class="dash-bottom">
+          <figure class="week">
+            <figcaption>최근 7일 완료</figcaption>
+            <div class="week-bars" id="weekBars"></div>
+          </figure>
+          <div class="quote-box">
+            <p class="quote-label">오늘의 문장</p>
+            <p class="quote" id="quote"></p>
+            <button type="button" class="icon-btn small" id="quoteBtn" aria-label="다른 문장 보기" title="다른 문장 보기">
+              <svg aria-hidden="true"><use href="#i-refresh"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 할 일 추가 -->
+    <section class="card composer" aria-label="할 일 추가">
+      <form id="addForm" autocomplete="off">
+        <div class="composer-main">
+          <label class="sr-only" for="taskInput">새 할 일</label>
+          <input id="taskInput" class="task-input" type="text" maxlength="200"
+                 placeholder="새로운 할 일을 입력하세요… (Alt+N)" aria-describedby="composerHint">
+          <button type="submit" class="btn primary" id="addBtn">
+            <svg aria-hidden="true"><use href="#i-plus"/></svg><span>추가</span>
+          </button>
+        </div>
+        <div class="composer-options">
+          <select id="catSelect" aria-label="카테고리"></select>
+          <label class="field date-field" title="비워 두면 등록한 날부터">
+            <span class="date-prefix">시작</span>
+            <input id="startInput" type="date" aria-label="시작일 (선택, 비우면 오늘)">
+          </label>
+          <label class="field date-field">
+            <span class="date-prefix">마감</span>
+            <input id="dueInput" type="date" aria-label="마감일 (선택)">
+          </label>
+          <div class="parse-preview" id="parsePreview" aria-hidden="true"></div>
+        </div>
+        <p class="hint" id="composerHint">
+          빠른 입력: <code>#공부</code> <code>@내일</code> <code>@10/3~10/7</code> 처럼 적으면 카테고리·마감일·기간이 자동으로 정해져요.
+          메모나 사진은 추가한 뒤 <svg class="inline-icon" aria-hidden="true"><use href="#i-edit"/></svg> 버튼에서 붙일 수 있어요.
+        </p>
+      </form>
+    </section>
+
+    <!-- 목록 / 달력 -->
+    <section class="card list-card" aria-labelledby="listTitle">
+      <div class="list-head">
+        <h2 class="sr-only" id="listTitle">할 일</h2>
+        <div class="view-switch" role="group" aria-label="보기 방식">
+          <button type="button" data-view="list" aria-pressed="true">
+            <svg aria-hidden="true"><use href="#i-list"/></svg>목록
+          </button>
+          <button type="button" data-view="calendar" aria-pressed="false">
+            <svg aria-hidden="true"><use href="#i-calendar"/></svg>달력
+          </button>
+        </div>
+        <label class="sort" id="sortWrap">
+          <span>정렬</span>
+          <select id="sortSelect"></select>
+        </label>
+      </div>
+
+      <div class="toolbar">
+        <label class="search">
+          <svg aria-hidden="true"><use href="#i-search"/></svg>
+          <span class="sr-only">할 일 검색</span>
+          <input id="searchInput" type="search" placeholder="할 일·메모 검색… ( / )" autocomplete="off">
+        </label>
+      </div>
+
+      <div class="chips" id="filterChips" role="group" aria-label="카테고리 필터"></div>
+
+      <div id="listView">
+        <ul class="task-list" id="activeList" aria-label="진행 중인 할 일"></ul>
+        <div class="empty" id="emptyState" hidden></div>
+
+        <details class="done-section" id="doneSection">
+          <summary>
+            <svg aria-hidden="true"><use href="#i-chevron"/></svg>
+            완료됨 <span class="count" id="doneCount">0</span>
+          </summary>
+          <ul class="task-list" id="doneList" aria-label="완료된 할 일"></ul>
+        </details>
+      </div>
+
+      <div id="calendarView" hidden>
+        <div class="cal-head">
+          <button type="button" class="icon-btn" id="calPrev" aria-label="이전 달"><svg aria-hidden="true"><use href="#i-left"/></svg></button>
+          <h3 class="cal-title" id="calTitle" aria-live="polite"></h3>
+          <button type="button" class="icon-btn" id="calNext" aria-label="다음 달"><svg aria-hidden="true"><use href="#i-right"/></svg></button>
+          <button type="button" class="btn small" id="calToday">오늘</button>
+        </div>
+        <div class="cal" id="calendar">
+          <div class="cal-weekdays" aria-hidden="true">
+            <span class="sun">일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span class="sat">토</span>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+        <p class="hint cal-hint">시작일부터 마감일까지 선으로 이어져요. 시작일을 비우면 등록한 날부터, 마감일이 없으면 그날 하루로 표시돼요.</p>
+
+        <section class="day-panel" aria-labelledby="dayTitle">
+          <div class="day-head">
+            <h3 id="dayTitle"></h3>
+            <button type="button" class="text-btn" id="addOnDay">
+              <svg aria-hidden="true"><use href="#i-plus"/></svg>이 날 마감으로 추가
+            </button>
+          </div>
+          <ul class="day-list" id="dayList"></ul>
+          <p class="day-empty" id="dayEmpty" hidden>이 날에 걸친 할 일이 없어요.</p>
+        </section>
+      </div>
+
+      <footer class="list-footer">
+        <span id="remainingLabel">남은 할 일 0개</span>
+        <div class="footer-actions">
+          <button type="button" class="text-btn danger" id="clearDoneBtn">
+            <svg aria-hidden="true"><use href="#i-trash"/></svg>완료 항목 삭제
+          </button>
+          <button type="button" class="text-btn" id="exportBtn">
+            <svg aria-hidden="true"><use href="#i-download"/></svg>내보내기
+          </button>
+          <button type="button" class="text-btn" id="importBtn">
+            <svg aria-hidden="true"><use href="#i-upload"/></svg>가져오기
+          </button>
+          <input type="file" id="importFile" accept=".json,application/json" hidden>
+        </div>
+      </footer>
+    </section>
+
+    <p class="credit">데이터는 이 브라우저에만 저장돼요 · 단축키 <kbd>?</kbd></p>
+  </div>
+
+  <!-- 알림(되돌리기) -->
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+    <span id="toastText"></span>
+    <button type="button" id="toastUndo">되돌리기</button>
+  </div>
+  <div class="sr-only" id="announcer" aria-live="polite"></div>
+
+  <!-- 할 일 상세 (메모·사진) -->
+  <dialog id="detailDialog" class="detail-dialog" aria-labelledby="detailHeading">
+    <form id="detailForm" class="dialog-body detail" autocomplete="off">
+      <div class="detail-top">
+        <h2 id="detailHeading" class="sr-only">할 일 자세히</h2>
+        <label class="check detail-check" title="완료">
+          <input type="checkbox" id="detailDone" aria-label="완료">
+          <span class="check-box" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span>
+        </label>
+        <input id="detailText" class="detail-text" type="text" maxlength="200" aria-label="할 일 내용" required>
+        <button type="button" class="icon-btn small" id="detailClose" aria-label="저장하고 닫기" title="저장하고 닫기 (Esc)">
+          <svg aria-hidden="true"><use href="#i-close"/></svg>
+        </button>
+      </div>
+
+      <div class="detail-fields">
+        <select id="detailCategory" aria-label="카테고리"></select>
+        <label class="field date-field">
+          <span class="date-prefix">시작</span>
+          <input id="detailStart" type="date" aria-label="시작일">
+        </label>
+        <label class="field date-field">
+          <span class="date-prefix">마감</span>
+          <input id="detailDue" type="date" aria-label="마감일">
+        </label>
+      </div>
+
+      <label class="detail-label" for="detailNote">
+        <svg aria-hidden="true"><use href="#i-note"/></svg>메모
+        <span class="counter" id="noteCounter"></span>
+      </label>
+      <textarea id="detailNote" class="detail-note" maxlength="5000" rows="5"
+                placeholder="자세한 내용, 준비물, 링크 등을 적어 두세요."></textarea>
+
+      <div class="detail-label">
+        <svg aria-hidden="true"><use href="#i-image"/></svg>사진
+        <span class="counter" id="imageCounter"></span>
+      </div>
+      <div class="gallery" id="gallery">
+        <button type="button" class="gallery-add" id="addImageBtn">
+          <svg aria-hidden="true"><use href="#i-plus"/></svg>
+          <span>사진 추가</span>
+          <small>끌어다 놓기 · 붙여넣기도 돼요</small>
+        </button>
+      </div>
+      <input type="file" id="imageFile" accept="image/*" multiple hidden>
+      <p class="hint" id="imageHint" hidden></p>
+
+      <p class="detail-meta" id="detailMeta"></p>
+
+      <div class="dialog-actions detail-actions">
+        <button type="button" class="btn danger-outline" id="detailDelete">
+          <svg aria-hidden="true"><use href="#i-trash"/></svg>삭제
+        </button>
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="detailCancel">취소</button>
+        <button type="submit" class="btn primary">저장</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 사진 크게 보기 -->
+  <dialog id="viewerDialog" class="viewer" aria-label="사진 크게 보기">
+    <img id="viewerImg" alt="">
+    <form method="dialog"><button class="icon-btn viewer-close" aria-label="닫기"><svg aria-hidden="true"><use href="#i-close"/></svg></button></form>
+  </dialog>
+
+  <!-- 가져오기 확인 -->
+  <dialog id="importDialog" aria-labelledby="importTitle">
+    <form method="dialog" class="dialog-body">
+      <h2 id="importTitle">데이터 가져오기</h2>
+      <p id="importSummary"></p>
+      <p class="muted">어느 쪽을 골라도 지금 목록은 자동으로 백업되고, 직후에 되돌릴 수 있어요.</p>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn">취소</button>
+        <button value="replace" class="btn">모두 바꾸기</button>
+        <button value="merge" class="btn primary" autofocus>합치기</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 사용법 -->
+  <dialog id="helpDialog" aria-labelledby="helpTitle">
+    <div class="dialog-body">
+      <h2 id="helpTitle">사용법과 단축키</h2>
+      <h3>빠른 입력</h3>
+      <table class="help-table">
+        <tbody>
+          <tr><td><code>#업무</code> <code>#개인</code> <code>#공부</code> <code>#과제</code></td><td>카테고리 (<code>#과제</code>는 공부로)</td></tr>
+          <tr><td><code>@오늘</code> <code>@내일</code> <code>@금</code> <code>@10/5</code></td><td>마감일</td></tr>
+          <tr><td><code>@10/3~10/7</code> <code>@오늘~금</code></td><td>기간 (시작일~마감일)</td></tr>
+        </tbody>
+      </table>
+      <p class="muted">예) <code>자료구조 과제 #과제 @오늘~10/9</code> → 달력에 오늘부터 9일까지 선으로 표시</p>
+      <h3>단축키</h3>
+      <table class="help-table">
+        <tbody>
+          <tr><td><kbd>Alt</kbd>+<kbd>N</kbd></td><td>새 할 일 입력</td></tr>
+          <tr><td><kbd>/</kbd></td><td>검색</td></tr>
+          <tr><td><kbd>Alt</kbd>+<kbd>1</kbd>~<kbd>4</kbd></td><td>전체 · 업무 · 개인 · 공부 필터</td></tr>
+          <tr><td><kbd>Alt</kbd>+<kbd>L</kbd> / <kbd>Alt</kbd>+<kbd>C</kbd></td><td>목록 / 달력 보기</td></tr>
+          <tr><td><kbd>Alt</kbd>+<kbd>T</kbd></td><td>다크 모드 전환</td></tr>
+          <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>방금 한 삭제·가져오기 되돌리기</td></tr>
+          <tr><td>더블클릭</td><td>제목 바로 고치기 (<kbd>Enter</kbd> 저장, <kbd>Esc</kbd> 취소)</td></tr>
+          <tr><td><kbd>Enter</kbd> · 연필 버튼</td><td>자세히 보기 (메모·사진)</td></tr>
+          <tr><td><kbd>Delete</kbd></td><td>선택한 할 일 삭제</td></tr>
+          <tr><td><kbd>Alt</kbd>+<kbd>↑</kbd>/<kbd>↓</kbd></td><td>순서 옮기기 (직접 정렬일 때)</td></tr>
+        </tbody>
+      </table>
+      <form method="dialog" class="dialog-actions">
+        <button class="btn primary">닫기</button>
+      </form>
+    </div>
+  </dialog>
+
+  <script src="js/tasks.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/images.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
