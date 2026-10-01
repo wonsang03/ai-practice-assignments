@@ -21,7 +21,7 @@
 ## 터미널로 실행하기
 
 ```bash
-cd mnist-digit-recognition                    # 0. 프로젝트 폴더로 이동
+cd Study-01                                   # 0. 프로젝트 폴더로 이동
 pip install -r requirements.txt               # 1. 라이브러리 설치
 python train_model.py                         # 2. 모델 학습
 python desktop_version/digit_recognition.py   # 3-1. 데스크톱 버전
@@ -47,7 +47,7 @@ python train_model.py --force       # 기존 모델을 무시하고 다시 학�
 ## 프로젝트 구조
 
 ```
-mnist-digit-recognition/
+Study-01/
 ├── CLAUDE.md                  # 프로젝트 공통 규칙 (클로드 코드 설정 파일)
 ├── README.md
 ├── requirements.txt           # 필요한 라이브러리 목록
