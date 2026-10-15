@@ -43,11 +43,16 @@
     records.forEach(r => {
       const li = document.createElement("li");
       if (r.id === highlight) li.className = "me";
-      li.textContent = `${r.name} — ${r.score}점 `;
+      const name = document.createElement("span");
+      name.className = "name";
+      name.textContent = r.name;
+      const score = document.createElement("span");
+      score.className = "score";
+      score.textContent = `${r.score}점`;
       const meta = document.createElement("span");
       meta.className = "meta";
-      meta.textContent = `(${QuizCore.formatTime(r.seconds)}, ${r.date})`;
-      li.append(meta);
+      meta.textContent = `${QuizCore.formatTime(r.seconds)} · ${r.date}`;
+      li.append(name, score, meta);
       listEl.append(li);
     });
   }
@@ -193,7 +198,10 @@
       const m = document.createElement("span");
       m.className = "muted";
       m.textContent = `${c.correct} / ${c.total}`;
-      li.append(m);
+      const bar = document.createElement("i");
+      bar.className = "mini-bar";
+      bar.style.setProperty("--pct", `${c.total ? (c.correct / c.total) * 100 : 0}%`);
+      li.append(m, bar);
       cats.append(li);
     });
 
@@ -221,6 +229,8 @@
 
     renderRanking($("ranking-result"), record.id);
     $("quiz-bar").style.width = "100%";
+    const max = total * POINTS;
+    $("result-title").textContent = score === max ? "🏆 만점!" : score >= max * 0.6 ? "🎉 합격권!" : "💪 조금만 더!";
     show("result");
   }
 
