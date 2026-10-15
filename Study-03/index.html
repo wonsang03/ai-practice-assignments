@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>정보처리기사 퀴즈</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main class="app">
+    <!-- 시작 화면 -->
+    <section id="screen-start" class="screen">
+      <h1>정보처리기사 퀴즈</h1>
+      <p class="lead">필기 5과목에서 과목별 2문제씩, 총 10문제를 풀어 봅니다.</p>
+      <ul class="cat-list" id="cat-list"></ul>
+      <form id="start-form" class="start-form">
+        <label for="player-name">이름</label>
+        <input id="player-name" type="text" maxlength="12" placeholder="순위표에 표시할 이름" autocomplete="off">
+        <button type="submit" class="btn primary">게임 시작</button>
+      </form>
+      <h2>순위표</h2>
+      <ol id="ranking-start" class="ranking"></ol>
+    </section>
+
+    <!-- 퀴즈 화면 -->
+    <section id="screen-quiz" class="screen" hidden>
+      <div class="quiz-head">
+        <span id="quiz-progress">1 / 10</span>
+        <span id="quiz-category" class="badge"></span>
+        <span id="quiz-score">0점</span>
+      </div>
+      <div class="bar"><div id="quiz-bar" class="bar-fill"></div></div>
+      <h2 id="quiz-question" class="question"></h2>
+      <pre id="quiz-code" class="code" hidden></pre>
+      <ul id="quiz-choices" class="choices"></ul>
+      <div id="quiz-feedback" class="feedback" role="status" aria-live="polite" hidden>
+        <strong id="feedback-title"></strong>
+        <p id="feedback-text"></p>
+      </div>
+      <button id="btn-next" class="btn primary" hidden>다음 문제</button>
+    </section>
+
+    <!-- 결과 화면 -->
+    <section id="screen-result" class="screen" hidden>
+      <h1>결과</h1>
+      <p id="result-summary" class="big"></p>
+      <h2>과목별 정답</h2>
+      <ul id="result-cats" class="cat-list"></ul>
+      <h2>틀린 문제</h2>
+      <ul id="result-wrong" class="wrong-list"></ul>
+      <h2>순위표</h2>
+      <ol id="ranking-result" class="ranking"></ol>
+      <button id="btn-retry" class="btn primary">다시 도전</button>
+    </section>
+  </main>
+
+  <script src="js/questions.js"></script>
+  <script src="js/quiz-core.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
