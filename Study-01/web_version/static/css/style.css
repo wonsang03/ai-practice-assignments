@@ -101,6 +101,24 @@ body {
   cursor: progress;
 }
 
+.btn--undo {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--muted);
+}
+
+.brush {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.confidence.is-low {
+  color: var(--red);
+}
+
 .btn--clear {
   background: var(--red);
   color: #ffffff;

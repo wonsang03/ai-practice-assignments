@@ -2,12 +2,13 @@
   const PER_CATEGORY = 2;
   const POINTS = 10;
   const RANK_KEY = "study03.ranking.v1";
+  const NAME_KEY = "study03.name";
   const CATEGORY_KEYS = Object.keys(CATEGORIES);
 
   const $ = id => document.getElementById(id);
   const screens = { start: $("screen-start"), quiz: $("screen-quiz"), result: $("screen-result") };
 
-  let game = null; // { name, questions, index, correct, wrongs, perCat, startedAt, answered }
+  let game = null; // { name, questions, index, correct, wrongs, perCat, startedAt, answered, ranked, timer }
 
   // ───── 저장소 (막힌 환경에서는 이번 접속 동안만 메모리에 보관) ─────
   let memoryRanking = [];
@@ -22,6 +23,13 @@
   function saveRanking(list) {
     memoryRanking = list;
     try { localStorage.setItem(RANK_KEY, JSON.stringify(list)); } catch (e) { /* 저장 불가 */ }
+  }
+
+  function loadName() {
+    try { return localStorage.getItem(NAME_KEY) || ""; } catch (e) { return ""; }
+  }
+  function saveName(name) {
+    try { localStorage.setItem(NAME_KEY, name); } catch (e) { /* 저장 불가 */ }
   }
 
   // ───── 화면 공통 ─────
@@ -72,20 +80,58 @@
       ul.append(li);
     });
     renderRanking($("ranking-start"));
+
+    const mode = $("mode");
+    mode.replaceChildren();
+    mode.append(new Option(`도전 모드 — ${CATEGORY_KEYS.length * PER_CATEGORY}문제, 순위표 기록`, "all"));
+    CATEGORY_KEYS.forEach((key, i) => mode.append(new Option(`${i + 1}과목 연습 — ${CATEGORIES[key].name}`, key)));
+    updateModeHint();
+    if (!$("player-name").value) $("player-name").value = loadName();
     show("start");
   }
+
+  function updateModeHint() {
+    const key = $("mode").value;
+    $("mode-hint").textContent = key === "all"
+      ? `과목별 ${PER_CATEGORY}문제씩 무작위로 뽑아 풀고, 점수와 시간이 순위표에 기록됩니다.`
+      : "고른 과목의 문제를 전부 풀어 봅니다. 연습이라 순위표에는 기록되지 않습니다.";
+  }
+  $("mode").addEventListener("change", updateModeHint);
+
+  $("btn-reset-rank").addEventListener("click", () => {
+    if (loadRanking().length === 0) return;
+    if (!confirm("순위표 기록을 모두 지울까요? 되돌릴 수 없습니다.")) return;
+    saveRanking([]);
+    renderRanking($("ranking-start"));
+  });
 
   $("start-form").addEventListener("submit", e => {
     e.preventDefault();
     const name = $("player-name").value.trim() || "익명";
-    const questions = QuizCore.pickQuestions(QUESTIONS, CATEGORY_KEYS, PER_CATEGORY).map(q => QuizCore.shuffleChoices(q));
+    saveName(name === "익명" ? "" : name);
+    const key = $("mode").value;
+    const picked = key === "all"
+      ? QuizCore.pickQuestions(QUESTIONS, CATEGORY_KEYS, PER_CATEGORY)
+      : QuizCore.pickCategory(QUESTIONS, key);
+    startGame(name, picked, key === "all");
+  });
+
+  function startGame(name, picked, ranked) {
+    if (game) clearInterval(game.timer);
+    const questions = picked.map(q => QuizCore.shuffleChoices(q));
     const perCat = {};
     CATEGORY_KEYS.forEach(k => { perCat[k] = { total: 0, correct: 0 }; });
     questions.forEach(q => { perCat[q.category].total++; });
-    game = { name, questions, index: 0, correct: 0, wrongs: [], perCat, startedAt: Date.now(), answered: false };
+    game = { name, questions, index: 0, correct: 0, wrongs: [], perCat, startedAt: Date.now(), answered: false, ranked, timer: null };
+    game.timer = setInterval(tick, 1000);
+    tick();
     show("quiz");
     renderQuestion();
-  });
+  }
+
+  function tick() {
+    $("quiz-time").textContent = QuizCore.formatTime(Math.round((Date.now() - game.startedAt) / 1000));
+  }
 
   // ───── 퀴즈 화면 ─────
   function renderQuestion() {
@@ -174,6 +220,7 @@
 
   // ───── 결과 화면 ─────
   function finish() {
+    clearInterval(game.timer);
     const total = game.questions.length;
     const score = game.correct * POINTS;
     const seconds = Math.round((Date.now() - game.startedAt) / 1000);
@@ -184,7 +231,7 @@
       seconds,
       date: new Date().toLocaleDateString("ko-KR")
     };
-    saveRanking(QuizCore.addRecord(loadRanking(), record));
+    if (game.ranked) saveRanking(QuizCore.addRecord(loadRanking(), record));
 
     $("result-summary").textContent =
       `${game.name}님, ${total}문제 중 ${game.correct}문제 정답 · ${score}점 · ${QuizCore.formatTime(seconds)}`;
@@ -227,12 +274,18 @@
       wrong.append(li);
     });
 
-    renderRanking($("ranking-result"), record.id);
+    $("ranking-section").hidden = !game.ranked;
+    if (game.ranked) renderRanking($("ranking-result"), record.id);
+    $("btn-retry-wrong").hidden = game.wrongs.length === 0;
     $("quiz-bar").style.width = "100%";
     const max = total * POINTS;
     $("result-title").textContent = score === max ? "🏆 만점!" : score >= max * 0.6 ? "🎉 합격권!" : "💪 조금만 더!";
     show("result");
   }
+
+  $("btn-retry-wrong").addEventListener("click", () => {
+    startGame(game.name, game.wrongs.map(w => w.q), false);
+  });
 
   $("btn-retry").addEventListener("click", renderStart);
 

@@ -41,6 +41,19 @@ test("과목이 정의되어 있고 과목마다 2문제 이상이다", () => {
   for (const q of QUESTIONS) assert.ok(CATEGORIES[q.category], q.id);
 });
 
+test("정답 위치가 과목마다 한쪽에 몰리지 않는다 (가이드라인 7)", () => {
+  for (const key of Object.keys(CATEGORIES)) {
+    const qs = QUESTIONS.filter(q => q.category === key);
+    const counts = [0, 0, 0, 0];
+    qs.forEach(q => counts[q.answer]++);
+    assert.ok(Math.max(...counts) <= Math.ceil(qs.length * 0.4), `${key}: ${counts}`);
+  }
+});
+test("id 접두어가 과목과 맞다", () => {
+  const prefix = { design: "d", develop: "v", database: "b", language: "p", system: "s" };
+  for (const q of QUESTIONS) assert.ok(q.id.startsWith(prefix[q.category]), q.id);
+});
+
 console.log("퀴즈 로직");
 test("pickQuestions: 과목당 지정한 개수만 뽑고 중복이 없다", () => {
   const keys = Object.keys(CATEGORIES);
@@ -48,6 +61,18 @@ test("pickQuestions: 과목당 지정한 개수만 뽑고 중복이 없다", () 
   assert.equal(picked.length, keys.length * 2);
   assert.equal(new Set(picked.map(q => q.id)).size, picked.length);
   for (const k of keys) assert.equal(picked.filter(q => q.category === k).length, 2);
+});
+test("pickCategory: 그 과목 문제만 전부, 중복 없이", () => {
+  const key = Object.keys(CATEGORIES)[0];
+  const picked = Core.pickCategory(QUESTIONS, key, seeded(2));
+  assert.equal(picked.length, QUESTIONS.filter(q => q.category === key).length);
+  assert.ok(picked.every(q => q.category === key));
+  assert.equal(new Set(picked.map(q => q.id)).size, picked.length);
+});
+test("shuffleChoices: 이미 섞은 문제를 다시 섞어도 정답이 같다", () => {
+  const once = Core.shuffleChoices(QUESTIONS[0], seeded(5));
+  const twice = Core.shuffleChoices(once, seeded(9));
+  assert.equal(twice.choices[twice.answer], QUESTIONS[0].choices[QUESTIONS[0].answer]);
 });
 test("shuffleChoices: 섞은 뒤에도 정답 보기가 같다 (여러 시드)", () => {
   for (let s = 1; s <= 50; s++) {

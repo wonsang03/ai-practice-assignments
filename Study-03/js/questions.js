@@ -1,5 +1,5 @@
 /*
- * 정보처리기사 필기 5과목 퀴즈 문제 은행 (과목당 6문제, 총 30문제)
+ * 정보처리기사 필기 5과목 퀴즈 문제 은행 (과목당 10문제, 총 50문제)
  * - answer: choices 배열에서 정답의 인덱스(0부터)
  * - code: 코드 출력 문제의 소스 (선택)
  * - explanation: 정답 해설. 문제를 추가할 때는 CLAUDE.md의 검증 가이드라인을 따를 것
@@ -231,6 +231,155 @@ const QUESTIONS = [
     choices: ["IaaS", "PaaS", "SaaS", "DaaS"],
     answer: 1,
     explanation: "IaaS는 인프라(서버·저장소), PaaS는 개발 플랫폼, SaaS는 완성된 소프트웨어를 서비스로 제공합니다."
+  },
+
+  // ───────── 추가 문제 (과목당 4문제). 코드 문제는 gcc·javac·python으로 실행해 정답 확인 ─────────
+  {
+    id: "d07", category: "design",
+    question: "객체지향의 특징 중, 같은 메시지를 받아도 객체(클래스)에 따라 서로 다르게 동작하는 성질은?",
+    choices: ["캡슐화", "상속", "다형성", "추상화"],
+    answer: 2,
+    explanation: "다형성(Polymorphism)은 하나의 메시지(메서드 호출)에 대해 객체가 속한 클래스에 따라 다른 방식으로 응답하는 성질입니다. 오버라이딩·오버로딩으로 구현됩니다."
+  },
+  {
+    id: "d08", category: "design",
+    question: "UML 클래스 간 관계 중 '전체-부분' 관계이면서, 전체 객체가 사라지면 부분 객체도 함께 사라지는 관계는?",
+    choices: ["합성(Composition)", "집약(Aggregation)", "일반화(Generalization)", "의존(Dependency)"],
+    answer: 0,
+    explanation: "합성은 부분이 전체에 생명주기를 의존하는 강한 전체-부분 관계입니다. 집약은 부분이 전체와 별도로 존재할 수 있는 약한 관계입니다."
+  },
+  {
+    id: "d09", category: "design",
+    question: "객체지향 설계 원칙 SOLID 중 'S'에 해당하는 것은?",
+    choices: ["개방-폐쇄 원칙", "단일 책임 원칙", "리스코프 치환 원칙", "인터페이스 분리 원칙"],
+    answer: 1,
+    explanation: "SOLID의 S는 단일 책임 원칙(Single Responsibility Principle)으로, 클래스는 변경 이유가 하나뿐이어야 한다는 원칙입니다."
+  },
+  {
+    id: "d10", category: "design",
+    question: "MVC 패턴에서 사용자에게 화면을 보여 주는 인터페이스를 담당하는 구성 요소는?",
+    choices: ["Model", "Controller", "View", "Observer"],
+    answer: 2,
+    explanation: "Model은 데이터와 비즈니스 로직, View는 화면 출력, Controller는 사용자 입력을 받아 Model과 View를 연결하는 역할을 합니다."
+  },
+
+  {
+    id: "v07", category: "develop",
+    question: "프로그램을 실행하지 않고 소스 코드를 검토(코드 리뷰, 정적 분석 등)하여 결함을 찾는 테스트는?",
+    choices: ["동적 테스트", "회귀 테스트", "인수 테스트", "정적 테스트"],
+    answer: 3,
+    explanation: "정적 테스트는 코드를 실행하지 않고 검토·분석으로 결함을 찾습니다. 동적 테스트는 코드를 실행하며 동작을 확인합니다."
+  },
+  {
+    id: "v08", category: "develop",
+    question: "화이트박스 테스트에서, 프로그램의 각 분기(결정) 지점이 참과 거짓의 결과를 모두 한 번 이상 갖도록 테스트 케이스를 설계하는 기준은?",
+    choices: ["구문(문장) 커버리지", "결정(분기) 커버리지", "경로 커버리지", "조건 커버리지"],
+    answer: 1,
+    explanation: "결정(분기) 커버리지는 각 결정문의 전체 결과가 참·거짓을 한 번씩 갖도록 합니다. 구문 커버리지는 모든 문장 실행, 경로 커버리지는 모든 경로 실행이 기준입니다."
+  },
+  {
+    id: "v09", category: "develop",
+    question: "공백 큐(Queue)에 A, B, C를 차례로 삽입(enqueue)한 뒤 삭제(dequeue)를 한 번 수행하면 삭제되는 원소는?",
+    choices: ["A", "B", "C", "알 수 없다"],
+    answer: 0,
+    explanation: "큐는 먼저 들어간 것이 먼저 나오는 FIFO 구조이므로 가장 먼저 삽입한 A가 삭제됩니다. (스택은 LIFO)"
+  },
+  {
+    id: "v10", category: "develop",
+    question: "정렬되어 있는 n개의 데이터에서 이진 탐색(Binary Search)의 최악 시간 복잡도는?",
+    choices: ["O(n)", "O(log n)", "O(n²)", "O(1)"],
+    answer: 1,
+    explanation: "이진 탐색은 한 번 비교할 때마다 탐색 범위가 절반으로 줄어 최악의 경우에도 O(log n)입니다."
+  },
+
+  {
+    id: "b07", category: "database",
+    question: "관계 대수 연산 중, 릴레이션에서 조건을 만족하는 튜플(행)을 선택하는 연산자는?",
+    choices: ["프로젝트(π)", "조인(⋈)", "셀렉트(σ)", "디비전(÷)"],
+    answer: 2,
+    explanation: "셀렉트(σ)는 조건에 맞는 행(튜플)을 고르고, 프로젝트(π)는 필요한 열(속성)만 고릅니다."
+  },
+  {
+    id: "b08", category: "database",
+    question: "SQL의 SELECT 문에서 중복된 결과 행을 제거하고 조회할 때 사용하는 키워드는?",
+    choices: ["UNIQUE", "SINGLE", "ONLY", "DISTINCT"],
+    answer: 3,
+    explanation: "SELECT DISTINCT 컬럼 … 형태로 중복 행을 제거합니다. UNIQUE는 조회 키워드가 아니라 중복을 막는 제약조건입니다."
+  },
+  {
+    id: "b09", category: "database",
+    question: "두 테이블을 조인할 때, 조인 조건이 양쪽 테이블 모두에서 일치하는 행만 결과로 반환하는 조인은?",
+    choices: ["LEFT OUTER JOIN", "FULL OUTER JOIN", "INNER JOIN", "CROSS JOIN"],
+    answer: 2,
+    explanation: "INNER JOIN은 조건이 일치하는 행만 반환합니다. OUTER JOIN은 일치하지 않는 행도(한쪽 또는 양쪽) 포함하고, CROSS JOIN은 모든 조합을 만듭니다."
+  },
+  {
+    id: "b10", category: "database",
+    question: "다른 릴레이션의 기본키를 참조하는 속성으로, 참조 무결성을 유지하는 데 사용하는 키는?",
+    choices: ["기본키", "외래키", "대체키", "슈퍼키"],
+    answer: 1,
+    explanation: "외래키(Foreign Key)는 다른 릴레이션의 기본키를 참조하며, 참조 무결성 제약조건의 대상이 됩니다."
+  },
+
+  {
+    id: "p07", category: "language",
+    question: "다음 C 프로그램의 출력 결과는?",
+    code: "#include <stdio.h>\nint main() {\n    int sum = 0;\n    for (int i = 1; i <= 5; i++) {\n        if (i % 2 == 0) continue;\n        sum += i;\n    }\n    printf(\"%d\", sum);\n    return 0;\n}",
+    choices: ["6", "15", "12", "9"],
+    answer: 3,
+    explanation: "i가 짝수이면 continue로 건너뛰므로 홀수 1, 3, 5만 더해 9가 출력됩니다."
+  },
+  {
+    id: "p08", category: "language",
+    question: "다음 Python 코드의 출력 결과는?",
+    code: "a = [1, 2, 3, 4, 5]\nprint(a[1:4])",
+    choices: ["[1, 2, 3, 4]", "[2, 3, 4, 5]", "[2, 3, 4]", "[1, 2, 3]"],
+    answer: 2,
+    explanation: "슬라이싱 a[1:4]는 인덱스 1부터 3까지(끝 인덱스 4는 포함하지 않음)의 요소인 [2, 3, 4]입니다."
+  },
+  {
+    id: "p09", category: "language",
+    question: "다음 Java 코드의 출력 결과는?",
+    code: "int x = 10;\nint y = 3;\nSystem.out.println(x / y + \" \" + x % y);",
+    choices: ["3 1", "3.33 1", "3 3", "1 3"],
+    answer: 0,
+    explanation: "정수끼리의 나눗셈 10 / 3은 몫 3, 나머지 연산 10 % 3은 1이므로 \"3 1\"이 출력됩니다."
+  },
+  {
+    id: "p10", category: "language",
+    question: "페이지 교체 알고리즘 중, 가장 오랫동안 참조되지 않은 페이지를 교체 대상으로 선택하는 방식은?",
+    choices: ["LRU", "FIFO", "LFU", "OPT"],
+    answer: 0,
+    explanation: "LRU(Least Recently Used)는 가장 오래전에 사용된 페이지를 교체합니다. FIFO는 가장 먼저 들어온 페이지, LFU는 참조 횟수가 가장 적은 페이지를 교체합니다."
+  },
+
+  {
+    id: "s07", category: "system",
+    question: "'공정과 도구보다 개인과 상호작용', '계획을 따르기보다 변화에 대응하기'를 가치로 내세운 소프트웨어 개발 방법론은?",
+    choices: ["애자일(Agile)", "폭포수 모형", "프로토타입 모형", "나선형 모형"],
+    answer: 0,
+    explanation: "애자일 소프트웨어 개발 선언의 4가지 가치에 해당하며, 짧은 주기의 반복 개발과 고객 협업을 강조합니다. 대표적으로 스크럼, XP가 있습니다."
+  },
+  {
+    id: "s08", category: "system",
+    question: "공격자가 웹 페이지에 악성 스크립트를 삽입해, 다른 사용자의 브라우저에서 그 스크립트가 실행되게 하는 공격은?",
+    choices: ["SQL Injection", "Ping of Death", "Sniffing", "XSS"],
+    answer: 3,
+    explanation: "XSS(Cross-Site Scripting)는 게시글 등에 악성 스크립트를 심어 방문자의 브라우저에서 실행시키는 공격입니다. 출력 시 입력값을 이스케이프하여 방어합니다."
+  },
+  {
+    id: "s09", category: "system",
+    question: "OSI 7계층 중 논리 주소(IP) 지정과 경로 설정(라우팅)을 담당하는 계층은?",
+    choices: ["데이터 링크 계층", "네트워크 계층", "전송 계층", "세션 계층"],
+    answer: 1,
+    explanation: "네트워크 계층(3계층)이 IP 주소와 라우팅을 담당합니다. 데이터 링크 계층은 MAC 주소 기반 전달, 전송 계층은 종단 간 신뢰성 있는 전송(TCP/UDP)을 맡습니다."
+  },
+  {
+    id: "s10", category: "system",
+    question: "다음 중 분산 버전 관리 시스템에 해당하는 것은?",
+    choices: ["Git", "CVS", "RCS", "Subversion(SVN)"],
+    answer: 0,
+    explanation: "Git은 모든 작업자가 저장소 전체 이력을 복제해 가지는 분산 방식입니다. CVS와 Subversion은 중앙 저장소 방식이고, RCS는 개별 파일 단위 관리 도구입니다."
   }
 ];
 

@@ -21,12 +21,16 @@
         <div class="board__draw">
           <canvas id="canvas" width="280" height="280"></canvas>
           <div class="board__buttons">
+            <button id="undo" class="btn btn--undo" type="button">Undo</button>
             <button id="clear" class="btn btn--clear" type="button">Clear</button>
             <button id="recognize" class="btn btn--recognize" type="button">
               Recognize
             </button>
           </div>
-          <p class="hint">Tip: Enter recognizes, Esc clears.</p>
+          <label class="brush">Brush
+            <input id="brush" type="range" min="12" max="32" value="22" />
+          </label>
+          <p class="hint">Tip: Enter recognizes, Esc clears, Ctrl+Z undoes.</p>
         </div>
 
         <aside class="board__result">

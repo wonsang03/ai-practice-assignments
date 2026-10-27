@@ -41,6 +41,7 @@ python train_model.py --force       # 기존 모델을 무시하고 다시 학�
 2. **[Recognize]** 버튼을 누르면 인식 결과와 신뢰도가 나옵니다.
 3. **[Clear]** 버튼으로 지우고 다시 그립니다.
 4. 단축키: `Enter` = 인식, `Esc` = 지우기
+   (웹 버전은 `Ctrl+Z`/[Undo]로 마지막 획을 되돌리고, 브러시 굵기를 조절할 수 있으며, 신뢰도가 60% 미만이면 다시 그려 보라고 안내합니다)
 
 잘 인식되게 그리는 요령: 상자 가운데에, 크게, 선이 끊기지 않게 그립니다.
 
@@ -69,6 +70,7 @@ Study-01/
 │   ├── templates/index.html
 │   └── static/css, static/js
 │
+├── tests/                     # 전처리·웹 API 테스트 (python -m unittest discover -s tests)
 ├── logs/                      # 학습 기록
 │   ├── analyze_log.py         #   로그 분석 스크립트
 │   ├── train_2026-09-17.log   #   학습 실행 기록

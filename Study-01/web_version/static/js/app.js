@@ -14,10 +14,18 @@
   var statusEl = document.getElementById("status");
   var clearButton = document.getElementById("clear");
   var recognizeButton = document.getElementById("recognize");
+  var undoButton = document.getElementById("undo");
+  var brushInput = document.getElementById("brush");
 
   var BRUSH_WIDTH = 22;
   var isDrawing = false;
   var hasDrawing = false;
+
+  // 획을 시작하기 직전의 캔버스를 쌓아 두고 Undo로 되돌린다.
+  var MAX_UNDO = 20;
+  var history = [];
+  var strokes = 0;
+  var LOW_CONFIDENCE = 60;
 
   // 데스크톱 버전과 입력을 정확히 맞추려고 캔버스를 흰색으로 시작한다.
   function resetCanvas() {
@@ -44,8 +52,14 @@
 
   function startStroke(event) {
     event.preventDefault();
+    history.push(context.getImageData(0, 0, canvas.width, canvas.height));
+    if (history.length > MAX_UNDO) {
+      history.shift();
+    }
+    context.lineWidth = Number(brushInput.value);
     isDrawing = true;
     hasDrawing = true;
+    strokes += 1;
 
     var point = pointFromEvent(event);
     context.beginPath();
@@ -85,20 +99,37 @@
     statusEl.classList.toggle("is-error", Boolean(isError));
   }
 
+  function resetResult() {
+    digitEl.textContent = "-";
+    confidenceEl.textContent = "Confidence: -";
+    confidenceEl.classList.remove("is-low");
+    previewEl.classList.remove("is-visible");
+    previewEl.removeAttribute("src");
+    scoresEl.replaceChildren();
+  }
+
+  function undo() {
+    if (!history.length) {
+      return;
+    }
+    context.putImageData(history.pop(), 0, 0);
+    strokes -= 1;
+    hasDrawing = strokes > 0;
+    resetResult();
+    setStatus("");
+  }
+
   function clearAll() {
     resetCanvas();
     hasDrawing = false;
-
-    digitEl.textContent = "-";
-    confidenceEl.textContent = "Confidence: -";
-    previewEl.classList.remove("is-visible");
-    previewEl.removeAttribute("src");
-    scoresEl.innerHTML = "";
+    history = [];
+    strokes = 0;
+    resetResult();
     setStatus("");
   }
 
   function renderScores(scores, predicted) {
-    scoresEl.innerHTML = "";
+    scoresEl.replaceChildren();
 
     scores.forEach(function (value, label) {
       var item = document.createElement("li");
@@ -156,12 +187,18 @@
       .then(function (data) {
         digitEl.textContent = String(data.digit);
         confidenceEl.textContent = "Confidence: " + data.confidence.toFixed(1) + "%";
+        confidenceEl.classList.toggle("is-low", data.confidence < LOW_CONFIDENCE);
+        if (data.confidence < LOW_CONFIDENCE) {
+          setStatus("Not sure about this one. Try a bigger, clearer digit.");
+        }
 
         previewEl.src = data.preview;
         previewEl.classList.add("is-visible");
 
         renderScores(data.scores, data.digit);
-        setStatus("");
+        if (data.confidence >= LOW_CONFIDENCE) {
+          setStatus("");
+        }
       })
       .catch(function (error) {
         setStatus(error.message, true);
@@ -173,9 +210,13 @@
 
   clearButton.addEventListener("click", clearAll);
   recognizeButton.addEventListener("click", recognize);
+  undoButton.addEventListener("click", undo);
 
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "z") {
+      event.preventDefault();
+      undo();
+    } else if (event.key === "Enter") {
       recognize();
     } else if (event.key === "Escape") {
       clearAll();

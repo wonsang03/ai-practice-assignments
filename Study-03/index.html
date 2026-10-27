@@ -16,10 +16,14 @@
       <form id="start-form" class="start-form">
         <label for="player-name">이름</label>
         <input id="player-name" type="text" maxlength="12" placeholder="순위표에 표시할 이름" autocomplete="off">
+        <label for="mode">모드</label>
+        <select id="mode"></select>
+        <p id="mode-hint" class="hint"></p>
         <button type="submit" class="btn primary">게임 시작</button>
       </form>
       <h2>순위표</h2>
       <ol id="ranking-start" class="ranking"></ol>
+      <button id="btn-reset-rank" type="button" class="btn link">순위표 초기화</button>
     </section>
 
     <!-- 퀴즈 화면 -->
@@ -27,6 +31,7 @@
       <div class="quiz-head">
         <span id="quiz-progress">1 / 10</span>
         <span id="quiz-category" class="badge"></span>
+        <span id="quiz-time" class="muted" aria-label="경과 시간">0초</span>
         <span id="quiz-score">0점</span>
       </div>
       <div class="bar"><div id="quiz-bar" class="bar-fill"></div></div>
@@ -48,8 +53,11 @@
       <ul id="result-cats" class="cat-list"></ul>
       <h2>틀린 문제</h2>
       <ul id="result-wrong" class="wrong-list"></ul>
-      <h2>순위표</h2>
-      <ol id="ranking-result" class="ranking"></ol>
+      <div id="ranking-section">
+        <h2>순위표</h2>
+        <ol id="ranking-result" class="ranking"></ol>
+      </div>
+      <button id="btn-retry-wrong" class="btn" hidden>틀린 문제만 다시 풀기</button>
       <button id="btn-retry" class="btn primary">다시 도전</button>
     </section>
   </main>

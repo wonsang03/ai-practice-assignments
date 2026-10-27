@@ -22,6 +22,11 @@ const QuizCore = (() => {
     return shuffle(picked, rng);
   }
 
+  // 한 과목의 문제를 전부 섞어서 돌려준다(과목 연습용).
+  function pickCategory(all, key, rng = Math.random) {
+    return shuffle(all.filter(q => q.category === key), rng);
+  }
+
   // 보기 순서를 섞고, 섞인 뒤의 정답 위치를 함께 돌려준다.
   function shuffleChoices(q, rng = Math.random) {
     const order = shuffle(q.choices.map((_, i) => i), rng);
@@ -48,7 +53,7 @@ const QuizCore = (() => {
     return m > 0 ? `${m}분 ${s}초` : `${s}초`;
   }
 
-  return { RANK_LIMIT, shuffle, pickQuestions, shuffleChoices, addRecord, formatTime };
+  return { RANK_LIMIT, shuffle, pickQuestions, pickCategory, shuffleChoices, addRecord, formatTime };
 })();
 
 if (typeof module !== "undefined") module.exports = QuizCore;
