@@ -106,6 +106,23 @@ test("addRecord: 상위 10개만 남긴다", () => {
   for (let i = 0; i < 15; i++) r = Core.addRecord(r, { name: "p" + i, score: i * 10 % 110, seconds: i });
   assert.equal(r.length, Core.RANK_LIMIT);
 });
+test("addRecord: 순위표는 문제 수별로 따로 센다 (count 없는 옛 기록은 10문제)", () => {
+  let r = [];
+  for (let i = 0; i < 12; i++) r = Core.addRecord(r, { name: "t" + i, score: i, seconds: 1, count: 5 });
+  r = Core.addRecord(r, { name: "old", score: 10, seconds: 9 });
+  r = Core.addRecord(r, { name: "big", score: 200, seconds: 9, count: 25 });
+  assert.equal(Core.recordsFor(r, 5).length, Core.RANK_LIMIT);
+  assert.deepEqual(Core.recordsFor(r, 10).map(x => x.name), ["old"]);
+  assert.deepEqual(Core.recordsFor(r, 25).map(x => x.name), ["big"]);
+});
+test("pickQuestions: 문제 수 5·10·15·25·50 모두 과목별로 같은 수를 뽑는다", () => {
+  const keys = Object.keys(CATEGORIES);
+  for (const n of [5, 10, 15, 25, 50]) {
+    const picked = Core.pickQuestions(QUESTIONS, keys, n / keys.length, seeded(n));
+    assert.equal(picked.length, n);
+    assert.equal(new Set(picked.map(q => q.id)).size, n);
+  }
+});
 test("formatTime", () => {
   assert.equal(Core.formatTime(45), "45초");
   assert.equal(Core.formatTime(125), "2분 5초");

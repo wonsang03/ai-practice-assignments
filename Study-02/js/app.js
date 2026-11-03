@@ -88,7 +88,7 @@
     'dayTitle', 'dayList', 'dayEmpty', 'addOnDay',
     'remainingLabel', 'clearDoneBtn', 'exportBtn', 'importBtn', 'importFile',
     'importDialog', 'importSummary', 'helpDialog',
-    'detailDialog', 'detailForm', 'detailDone', 'detailText', 'detailClose', 'detailCategory',
+    'detailRepeat', 'icsBtn', 'detailDialog', 'detailForm', 'detailDone', 'detailText', 'detailClose', 'detailCategory',
     'detailStart', 'detailDue', 'detailNote', 'noteCounter', 'gallery', 'addImageBtn',
     'imageFile', 'imageHint', 'imageCounter', 'detailMeta', 'detailDelete', 'detailCancel',
     'viewerDialog', 'viewerImg',
@@ -158,6 +158,7 @@
       category: parsed.category ?? els.catSelect.value,
       start: fromTokens ? parsed.start : (els.startInput.value || null),
       due: fromTokens ? parsed.due : (els.dueInput.value || null),
+      repeat: parsed.repeat ?? 'none',
       order: T.topOrder(state.tasks),
     });
 
@@ -195,12 +196,22 @@
     return { task: { ...task, completed: false, completedAt: null, updatedAt: now.toISOString() }, history: h };
   }
 
+  /** '10월 12일(월) ~ 10월 14일(수)' 같은 다음 일정 안내 문구 */
+  function repeatSummary(task) {
+    const span = T.taskSpan(task);
+    return T.formatPeriod(span.start, span.end);
+  }
+
   function toggleTask(id) {
     const task = findTask(id);
     if (!task) return;
     const { task: next, history } = withCompletion(task, !task.completed, state.history);
-    const tasks = state.tasks.map((t) => (t.id === id ? next : t));
-    commit({ ...state, tasks, history }, { announce: next.completed ? `"${task.text}" 완료` : `"${task.text}" 다시 진행 중` });
+    let tasks = state.tasks.map((t) => (t.id === id ? next : t));
+    const follow = next.completed ? T.nextOccurrence(next, tasks) : null;
+    if (follow) tasks = [{ ...follow, order: T.topOrder(tasks) }, ...tasks];
+    commit({ ...state, tasks, history }, {
+      announce: next.completed ? `"${task.text}" 완료${follow ? ` · 다음 일정 ${repeatSummary(follow)}` : ''}` : `"${task.text}" 다시 진행 중`,
+    });
     const li = nodes.get(id)?.el;
     if (li && next.completed && !REDUCED_MOTION.matches) {
       li.classList.add('just-done');
@@ -266,6 +277,7 @@
     els.detailCategory.value = task.category;
     els.detailStart.value = task.start ?? '';
     els.detailDue.value = task.due ?? '';
+    els.detailRepeat.value = task.repeat;
     els.detailNote.value = task.note;
     els.detailDialog.classList.toggle('is-done', task.completed);
     els.detailDialog.dataset.category = task.category;
@@ -295,15 +307,18 @@
       return false;
     }
     const period = T.cleanPeriod(els.detailStart.value || null, els.detailDue.value || null);
+    const repeat = period.start || period.due ? els.detailRepeat.value : 'none';
+    if (els.detailRepeat.value !== 'none' && repeat === 'none') showToast('반복은 시작일이나 마감일이 있어야 해요');
     let next = {
       ...task,
       text,
       category: els.detailCategory.value,
       ...period,
+      repeat,
       note: T.cleanNote(els.detailNote.value),
       images: d.images,
     };
-    const changed = ['text', 'category', 'start', 'due', 'note'].some((k) => next[k] !== task[k])
+    const changed = ['text', 'category', 'start', 'due', 'repeat', 'note'].some((k) => next[k] !== task[k])
       || next.images.join() !== task.images.join();
     if (changed) next.updatedAt = new Date().toISOString();
 
@@ -311,8 +326,11 @@
     next = completion.task;
     closeDetail();
     if (changed || next.completed !== task.completed) {
-      commit({ ...state, tasks: state.tasks.map((t) => (t.id === task.id ? next : t)), history: completion.history },
-        { announce: '저장됨' });
+      let tasks = state.tasks.map((t) => (t.id === task.id ? next : t));
+      const follow = next.completed && !task.completed ? T.nextOccurrence(next, tasks) : null;
+      if (follow) tasks = [{ ...follow, order: T.topOrder(tasks) }, ...tasks];
+      commit({ ...state, tasks, history: completion.history },
+        { announce: follow ? `저장됨 · 다음 일정 ${repeatSummary(follow)}` : '저장됨' });
     }
     return true;
   }
@@ -586,7 +604,7 @@
 
   function signature(task, now, today) {
     const stamp = task.completed ? task.completedAt : task.createdAt;
-    return [task.text, task.category, task.start, task.due, task.completed, task.note.length,
+    return [task.text, task.category, task.start, task.due, task.repeat, task.completed, task.note.length,
       task.images.join(','), T.relativeTime(stamp, now), today].join('|');
   }
 
@@ -617,6 +635,10 @@
         meta.append(el('span', { className: `due due-${due.tone}`, title: T.formatPeriod(T.taskSpan(task).start, task.due) },
           icon(due.tone === 'overdue' ? 'alert' : 'calendar'), due.label));
       }
+    }
+    if (task.repeat !== 'none') {
+      const label = T.REPEATS.find((r) => r.id === task.repeat).label;
+      meta.append(el('span', { className: 'attach', title: `${label} 반복` }, `↻ ${label}`));
     }
     if (task.note) meta.append(el('span', { className: 'attach', title: '메모 있음' }, icon('note'), '메모'));
     if (task.images.length) meta.append(el('span', { className: 'attach', title: `사진 ${task.images.length}장` }, icon('image'), String(task.images.length)));
@@ -753,6 +775,7 @@
     const parsed = T.parseQuickAdd(els.taskInput.value);
     const chips = [];
     if (parsed.category) chips.push(['cat', `카테고리 · ${T.CATEGORIES.find((c) => c.id === parsed.category).label}`]);
+    if (parsed.repeat) chips.push(['cat', `반복 · ${T.REPEATS.find((r) => r.id === parsed.repeat).label}`]);
     if (parsed.start) chips.push(['due', `기간 · ${T.formatPeriod(parsed.start, parsed.due)}`]);
     else if (parsed.due) chips.push(['due', `마감 · ${T.formatShortDate(parsed.due)}`]);
     els.parsePreview.replaceChildren(...chips.map(([kind, label]) => el('span', { className: `parsed parsed-${kind}` }, label)));
@@ -936,6 +959,22 @@
   // 가져오기 / 내보내기
   // ---------------------------------------------------------------------------
 
+  function exportCalendar() {
+    const { text, count } = T.toICS(state.tasks);
+    if (!count) {
+      showToast('내보낼 일정이 없어요. 시작일이나 마감일이 있는 진행 중인 할 일이 필요해요');
+      return;
+    }
+    const blob = new Blob([text], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = el('a', { href: url, download: 'my-tasks.ics' });
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast(`일정 ${count}개를 캘린더 파일로 저장했어요`);
+  }
+
   async function exportData() {
     const ids = state.tasks.flatMap((t) => t.images);
     let images = {};
@@ -1115,6 +1154,7 @@
 
     els.clearDoneBtn.addEventListener('click', clearDone);
     els.exportBtn.addEventListener('click', exportData);
+    els.icsBtn.addEventListener('click', exportCalendar);
     els.importBtn.addEventListener('click', () => els.importFile.click());
     els.importFile.addEventListener('change', onImportFile);
     els.importDialog.addEventListener('close', onImportClose);
@@ -1347,6 +1387,7 @@
       els.catSelect.append(el('option', { value: c.id }, c.label));
       els.detailCategory.append(el('option', { value: c.id }, c.label));
     }
+    for (const r of T.REPEATS) els.detailRepeat.append(el('option', { value: r.id }, r.label));
     for (const s of T.SORTS) els.sortSelect.append(el('option', { value: s.id }, s.label));
     if (state.settings.category !== 'all') els.catSelect.value = state.settings.category;
 

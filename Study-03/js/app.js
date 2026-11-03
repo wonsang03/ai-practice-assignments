@@ -1,5 +1,6 @@
 (() => {
-  const PER_CATEGORY = 2;
+  const COUNTS = [5, 10, 15, 25, 50]; // 5과목에서 똑같이 뽑으므로 5의 배수
+  const DEFAULT_COUNT = 10;
   const POINTS = 10;
   const RANK_KEY = "study03.ranking.v1";
   const NAME_KEY = "study03.name";
@@ -38,9 +39,9 @@
     window.scrollTo(0, 0);
   }
 
-  function renderRanking(listEl, highlight) {
+  function renderRanking(listEl, highlight, count) {
     listEl.replaceChildren();
-    const records = loadRanking();
+    const records = QuizCore.recordsFor(loadRanking(), count);
     if (records.length === 0) {
       const li = document.createElement("li");
       li.className = "empty";
@@ -79,30 +80,43 @@
       li.append(m);
       ul.append(li);
     });
-    renderRanking($("ranking-start"));
-
     const mode = $("mode");
     mode.replaceChildren();
-    mode.append(new Option(`도전 모드 — ${CATEGORY_KEYS.length * PER_CATEGORY}문제, 순위표 기록`, "all"));
+    mode.append(new Option("도전 모드 — 문제 수 선택, 순위표 기록", "all"));
     CATEGORY_KEYS.forEach((key, i) => mode.append(new Option(`${i + 1}과목 연습 — ${CATEGORIES[key].name}`, key)));
+    const count = $("count");
+    count.replaceChildren();
+    COUNTS.forEach(n => count.append(new Option(`${n}문제`, String(n))));
+    count.value = String(DEFAULT_COUNT);
     updateModeHint();
     if (!$("player-name").value) $("player-name").value = loadName();
     show("start");
   }
 
+  function selectedCount() {
+    return Number($("count").value) || DEFAULT_COUNT;
+  }
+
   function updateModeHint() {
     const key = $("mode").value;
-    $("mode-hint").textContent = key === "all"
-      ? `과목별 ${PER_CATEGORY}문제씩 무작위로 뽑아 풀고, 점수와 시간이 순위표에 기록됩니다.`
+    const challenge = key === "all";
+    $("count").hidden = !challenge;
+    $("count-label").hidden = !challenge;
+    $("mode-hint").textContent = challenge
+      ? `과목별 ${selectedCount() / CATEGORY_KEYS.length}문제씩 무작위로 뽑아 풀고, 점수와 시간이 순위표에 기록됩니다. 순위표는 문제 수별로 따로 관리합니다.`
       : "고른 과목의 문제를 전부 풀어 봅니다. 연습이라 순위표에는 기록되지 않습니다.";
+    const n = challenge ? selectedCount() : DEFAULT_COUNT;
+    $("ranking-title").textContent = `순위표 (${n}문제)`;
+    renderRanking($("ranking-start"), null, n);
   }
   $("mode").addEventListener("change", updateModeHint);
+  $("count").addEventListener("change", updateModeHint);
 
   $("btn-reset-rank").addEventListener("click", () => {
     if (loadRanking().length === 0) return;
     if (!confirm("순위표 기록을 모두 지울까요? 되돌릴 수 없습니다.")) return;
     saveRanking([]);
-    renderRanking($("ranking-start"));
+    updateModeHint();
   });
 
   $("start-form").addEventListener("submit", e => {
@@ -111,18 +125,18 @@
     saveName(name === "익명" ? "" : name);
     const key = $("mode").value;
     const picked = key === "all"
-      ? QuizCore.pickQuestions(QUESTIONS, CATEGORY_KEYS, PER_CATEGORY)
+      ? QuizCore.pickQuestions(QUESTIONS, CATEGORY_KEYS, selectedCount() / CATEGORY_KEYS.length)
       : QuizCore.pickCategory(QUESTIONS, key);
-    startGame(name, picked, key === "all");
+    startGame(name, picked, key === "all", selectedCount());
   });
 
-  function startGame(name, picked, ranked) {
+  function startGame(name, picked, ranked, count) {
     if (game) clearInterval(game.timer);
     const questions = picked.map(q => QuizCore.shuffleChoices(q));
     const perCat = {};
     CATEGORY_KEYS.forEach(k => { perCat[k] = { total: 0, correct: 0 }; });
     questions.forEach(q => { perCat[q.category].total++; });
-    game = { name, questions, index: 0, correct: 0, wrongs: [], perCat, startedAt: Date.now(), answered: false, ranked, timer: null };
+    game = { name, questions, index: 0, correct: 0, wrongs: [], perCat, startedAt: Date.now(), answered: false, ranked, count, timer: null };
     game.timer = setInterval(tick, 1000);
     tick();
     show("quiz");
@@ -228,6 +242,7 @@
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
       name: game.name,
       score,
+      count: total,
       seconds,
       date: new Date().toLocaleDateString("ko-KR")
     };
@@ -275,7 +290,8 @@
     });
 
     $("ranking-section").hidden = !game.ranked;
-    if (game.ranked) renderRanking($("ranking-result"), record.id);
+    if (game.ranked) renderRanking($("ranking-result"), record.id, total);
+    $("ranking-result-title").textContent = `순위표 (${total}문제)`;
     $("btn-retry-wrong").hidden = game.wrongs.length === 0;
     $("quiz-bar").style.width = "100%";
     const max = total * POINTS;
@@ -284,7 +300,7 @@
   }
 
   $("btn-retry-wrong").addEventListener("click", () => {
-    startGame(game.name, game.wrongs.map(w => w.q), false);
+    startGame(game.name, game.wrongs.map(w => w.q), false, game.wrongs.length);
   });
 
   $("btn-retry").addEventListener("click", renderStart);

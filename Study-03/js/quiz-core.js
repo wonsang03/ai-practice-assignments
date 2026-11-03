@@ -37,14 +37,29 @@ const QuizCore = (() => {
     };
   }
 
-  // 점수 높은 순, 같으면 걸린 시간 짧은 순, 그래도 같으면 먼저 기록한 순.
+  // 문제 수가 다르면 점수를 비교할 수 없으므로 순위표는 문제 수별로 나눈다.
+  // count가 없는 예전 기록은 기본 10문제로 본다.
+  const DEFAULT_COUNT = 10;
+  const countOf = r => r.count || DEFAULT_COUNT;
+
+  // 점수 높은 순, 같으면 걸린 시간 짧은 순, 그래도 같으면 먼저 기록한 순. 문제 수별로 상위 RANK_LIMIT개만 남긴다.
   function addRecord(records, record) {
+    const kept = {};
     return records
       .concat(record)
       .map((r, i) => ({ r, i }))
       .sort((a, b) => b.r.score - a.r.score || a.r.seconds - b.r.seconds || a.i - b.i)
       .map(x => x.r)
-      .slice(0, RANK_LIMIT);
+      .filter(r => {
+        const n = countOf(r);
+        kept[n] = (kept[n] || 0) + 1;
+        return kept[n] <= RANK_LIMIT;
+      });
+  }
+
+  // 한 문제 수의 순위표만 골라 낸다.
+  function recordsFor(records, count) {
+    return records.filter(r => countOf(r) === count);
   }
 
   function formatTime(totalSeconds) {
@@ -53,7 +68,7 @@ const QuizCore = (() => {
     return m > 0 ? `${m}분 ${s}초` : `${s}초`;
   }
 
-  return { RANK_LIMIT, shuffle, pickQuestions, pickCategory, shuffleChoices, addRecord, formatTime };
+  return { RANK_LIMIT, shuffle, pickQuestions, pickCategory, shuffleChoices, addRecord, recordsFor, formatTime };
 })();
 
 if (typeof module !== "undefined") module.exports = QuizCore;

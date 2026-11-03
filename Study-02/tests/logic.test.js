@@ -27,13 +27,13 @@ test('날짜 키는 UTC가 아니라 로컬 날짜를 씁니다', () => {
 
 test('빠른 입력: 카테고리·마감일 토큰을 떼어 냅니다', () => {
   const r = T.parseQuickAdd('보고서 제출 #업무 @내일', NOW);
-  assert.deepEqual(r, { text: '보고서 제출', category: 'work', start: null, due: '2026-10-02' });
+  assert.deepEqual(r, { text: '보고서 제출', category: 'work', start: null, due: '2026-10-02', repeat: null });
   assert.equal(T.parseQuickAdd('자료구조 #과제', NOW).category, 'study');
 });
 
 test('빠른 입력: 기간 @시작~마감', () => {
-  assert.deepEqual(T.parseQuickAdd('과제 @10/3~10/7', NOW), { text: '과제', category: null, start: '2026-10-03', due: '2026-10-07' });
-  assert.deepEqual(T.parseQuickAdd('과제 @오늘~금', NOW), { text: '과제', category: null, start: '2026-10-01', due: '2026-10-02' });
+  assert.deepEqual(T.parseQuickAdd('과제 @10/3~10/7', NOW), { text: '과제', category: null, start: '2026-10-03', due: '2026-10-07', repeat: null });
+  assert.deepEqual(T.parseQuickAdd('과제 @오늘~금', NOW), { text: '과제', category: null, start: '2026-10-01', due: '2026-10-02', repeat: null });
   // 거꾸로 적어도 바로잡습니다.
   assert.equal(T.parseQuickAdd('a @10/7~10/3', NOW).start, '2026-10-03');
   assert.equal(T.parseQuickAdd('a @10/7~이상함', NOW).text, 'a @10/7~이상함');
@@ -321,4 +321,69 @@ test('설정: 보기 방식 저장, 없어진 정렬(우선순위)은 기본값�
   const { state } = S.normalizeState({ tasks: [], settings: { view: 'calendar', sort: 'priority' } }, NOW);
   assert.equal(state.settings.view, 'calendar');
   assert.equal(state.settings.sort, 'manual');
+});
+
+test('빠른 입력: !매일 !매주 !매월 로 반복을 지정합니다', () => {
+  assert.equal(T.parseQuickAdd('운동 !매일 @오늘', NOW).repeat, 'daily');
+  assert.equal(T.parseQuickAdd('청소 !매주 @토', NOW).repeat, 'weekly');
+  assert.equal(T.parseQuickAdd('월세 !매월 @10/25', NOW).repeat, 'monthly');
+  const r = T.parseQuickAdd('놀람!매일 !모름', NOW);
+  assert.equal(r.repeat, null);
+  assert.equal(r.text, '놀람!매일 !모름');
+});
+
+test('반복: 날짜가 없으면 반복 안 함으로 정리합니다', () => {
+  assert.equal(T.createTask({ text: 'a', repeat: 'daily' }, NOW).repeat, 'none');
+  assert.equal(T.createTask({ text: 'a', repeat: 'daily', due: '2026-10-02' }, NOW).repeat, 'daily');
+  assert.equal(T.createTask({ text: 'a', repeat: '이상함', due: '2026-10-02' }, NOW).repeat, 'none');
+  assert.equal(T.normalizeTask({ text: 'a', repeat: 'weekly', due: '2026-10-02' }).repeat, 'weekly');
+  assert.equal(T.normalizeTask({ text: 'a' }).repeat, 'none');
+});
+
+test('반복: 날짜 이동(매일·매주·매월, 말일 보정, 연말)', () => {
+  assert.equal(T.shiftDate('2026-10-31', 'daily'), '2026-11-01');
+  assert.equal(T.shiftDate('2026-12-28', 'weekly'), '2027-01-04');
+  assert.equal(T.shiftDate('2026-01-31', 'monthly'), '2026-02-28');
+  assert.equal(T.shiftDate('2028-01-31', 'monthly'), '2028-02-29');
+  assert.equal(T.shiftDate('2026-12-15', 'monthly'), '2027-01-15');
+  assert.equal(T.shiftDate('2026-10-01', 'none'), '2026-10-01');
+});
+
+test('반복: 완료하면 같은 길이의 다음 일정이 생기고, 중복은 만들지 않습니다', () => {
+  const t = T.createTask({ text: '주간 보고', category: 'work', start: '2026-10-05', due: '2026-10-07', repeat: 'weekly', note: '메모', images: ['img1'] }, NOW);
+  const next = T.nextOccurrence({ ...t, completed: true }, [], NOW);
+  assert.equal(next.start, '2026-10-12');
+  assert.equal(next.due, '2026-10-14');
+  assert.equal(next.repeat, 'weekly');
+  assert.equal(next.completed, false);
+  assert.notEqual(next.id, t.id);
+  assert.deepEqual(next.images, []);
+  assert.equal(next.note, '메모');
+  assert.equal(T.nextOccurrence({ ...t, completed: true }, [next], NOW), null);
+  assert.equal(T.nextOccurrence({ ...t, repeat: 'none' }, [], NOW), null);
+});
+test('ICS: 진행 중인 날짜 일정만 종일 일정으로 내보냅니다', () => {
+  const a = T.createTask({ text: '과제, 제출; 끝', start: '2026-10-03', due: '2026-10-05', note: '줄1\n줄2' }, NOW);
+  const b = T.createTask({ text: '날짜 없음' }, NOW);
+  const c = { ...T.createTask({ text: '끝난 일', due: '2026-10-02' }, NOW), completed: true };
+  const d = T.createTask({ text: '하루짜리', due: '2026-12-31' }, NOW);
+  const { text, count } = T.toICS([a, b, c, d], NOW);
+  assert.equal(count, 2);
+  assert.ok(text.startsWith('BEGIN:VCALENDAR\r\n'));
+  assert.ok(text.endsWith('END:VCALENDAR\r\n'));
+  assert.ok(text.includes('DTSTART;VALUE=DATE:20261003\r\n'));
+  assert.ok(text.includes('DTEND;VALUE=DATE:20261006\r\n')); // 종료일은 다음 날(미포함)
+  assert.ok(text.includes('SUMMARY:과제\\, 제출\\; 끝'));
+  assert.ok(text.includes('DESCRIPTION:줄1\\n줄2'));
+  assert.ok(text.includes('DTEND;VALUE=DATE:20270101')); // 연말 하루 일정
+  assert.ok(!text.includes('날짜 없음') && !text.includes('끝난 일'));
+  assert.equal((text.match(/BEGIN:VEVENT/g) || []).length, 2);
+});
+
+test('ICS: 긴 줄은 75바이트로 접고, 한글 글자가 쪼개지지 않습니다', () => {
+  const long = T.createTask({ text: '가'.repeat(60), due: '2026-10-02' }, NOW);
+  const { text } = T.toICS([long], NOW);
+  for (const line of text.split('\r\n')) assert.ok(new TextEncoder().encode(line).length <= 75, line);
+  const unfolded = text.replace(/\r\n /g, '');
+  assert.ok(unfolded.includes('SUMMARY:' + '가'.repeat(60)));
 });

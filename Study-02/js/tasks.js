@@ -30,10 +30,18 @@
     { id: 'category', label: '카테고리순' },
   ];
 
+  const REPEATS = [
+    { id: 'none', label: '반복 안 함', aliases: [] },
+    { id: 'daily', label: '매일', aliases: ['매일', 'daily'] },
+    { id: 'weekly', label: '매주', aliases: ['매주', 'weekly'] },
+    { id: 'monthly', label: '매월', aliases: ['매월', '매달', 'monthly'] },
+  ];
+
   const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
   const categoryIds = CATEGORIES.map((c) => c.id);
   const sortIds = SORTS.map((s) => s.id);
+  const repeatIds = REPEATS.map((r) => r.id);
 
   // ---------------------------------------------------------------------------
   // 날짜 도우미
@@ -130,12 +138,16 @@
    * @returns {{text: string, category: string|null, start: string|null, due: string|null}}
    */
   function parseQuickAdd(input, now = new Date()) {
-    const result = { text: '', category: null, start: null, due: null };
+    const result = { text: '', category: null, start: null, due: null, repeat: null };
     const kept = [];
     for (const token of String(input).split(/\s+/).filter(Boolean)) {
       if (token.length > 1 && token[0] === '#') {
         const category = findCategory(token.slice(1));
         if (category) { result.category = category; continue; }
+      }
+      if (token.length > 1 && token[0] === '!') {
+        const repeat = REPEATS.find((r) => r.aliases.includes(token.slice(1).toLowerCase()));
+        if (repeat) { result.repeat = repeat.id; continue; }
       }
       if (token.length > 1 && token[0] === '@') {
         const range = parseRangeToken(token.slice(1), now);
@@ -188,13 +200,21 @@
     return { start: s, due: d };
   }
 
-  function createTask({ text, category = 'work', start = null, due = null, note = '', images = [], order = 0 }, now = new Date()) {
+  /** 반복은 날짜(시작일이나 마감일)가 있어야 의미가 있어서, 날짜가 없으면 'none'으로 돌립니다. */
+  function cleanRepeat(repeat, period) {
+    if (!repeatIds.includes(repeat)) return 'none';
+    return period.start || period.due ? repeat : 'none';
+  }
+
+  function createTask({ text, category = 'work', start = null, due = null, repeat = 'none', note = '', images = [], order = 0 }, now = new Date()) {
     const iso = now.toISOString();
+    const period = cleanPeriod(start, due);
     return {
       id: makeId(),
       text: cleanText(text),
       category: categoryIds.includes(category) ? category : 'work',
-      ...cleanPeriod(start, due),
+      ...period,
+      repeat: cleanRepeat(repeat, period),
       note: cleanNote(note),
       images: cleanImages(images),
       completed: false,
@@ -221,11 +241,13 @@
     const completed = Boolean(raw.completed);
     let completedAt = null;
     if (completed) completedAt = isIsoDate(raw.completedAt) ? new Date(raw.completedAt).toISOString() : createdAt;
+    const period = cleanPeriod(raw.start, raw.due);
     return {
       id: typeof raw.id === 'string' && /^[\w-]{1,64}$/.test(raw.id) ? raw.id : makeId(),
       text,
       category: categoryIds.includes(raw.category) ? raw.category : 'work',
-      ...cleanPeriod(raw.start, raw.due),
+      ...period,
+      repeat: cleanRepeat(raw.repeat, period),
       note: cleanNote(raw.note),
       images: cleanImages(raw.images),
       completed,
@@ -234,6 +256,88 @@
       completedAt,
       order: Number.isFinite(raw.order) ? raw.order : fallbackOrder,
     };
+  }
+
+  // ---------------------------------------------------------------------------
+  // 반복 일정
+  // ---------------------------------------------------------------------------
+
+  /** 날짜를 반복 주기만큼 미룹니다. 매월은 같은 날짜로, 그 달에 없으면(31일 등) 말일로 맞춥니다. */
+  function shiftDate(key, repeat) {
+    const d = parseDateKey(key);
+    if (repeat === 'daily') return toDateKey(addDays(d, 1));
+    if (repeat === 'weekly') return toDateKey(addDays(d, 7));
+    if (repeat === 'monthly') {
+      const lastDay = new Date(d.getFullYear(), d.getMonth() + 2, 0).getDate();
+      return toDateKey(new Date(d.getFullYear(), d.getMonth() + 1, Math.min(d.getDate(), lastDay)));
+    }
+    return key;
+  }
+
+  /**
+   * 반복 일정을 완료했을 때 이어질 다음 일정. 반복이 아니거나 날짜가 없으면 null.
+   * 기간(시작~마감 길이)은 그대로 유지하고, 사진은 가져가지 않습니다(같은 사진을 두 할 일이 나눠 쓰면 지울 때 꼬입니다).
+   * existing에 같은 다음 일정이 이미 있으면 null이라서, 완료 체크를 껐다 켜도 중복으로 생기지 않습니다.
+   */
+  function nextOccurrence(task, existing = [], now = new Date()) {
+    if (!task.repeat || task.repeat === 'none') return null;
+    if (!task.start && !task.due) return null;
+    const start = task.start ? shiftDate(task.start, task.repeat) : null;
+    const due = task.due ? shiftDate(task.due, task.repeat) : null;
+    const dup = existing.some((t) => !t.completed && t.id !== task.id && t.text === task.text
+      && t.category === task.category && t.start === start && t.due === due);
+    if (dup) return null;
+    return createTask({ text: task.text, category: task.category, start, due, repeat: task.repeat, note: task.note, order: task.order }, now);
+  }
+
+  // ---------------------------------------------------------------------------
+  // 캘린더 파일(.ics) 내보내기: 구글 캘린더·애플 캘린더·아웃룩에서 가져올 수 있습니다.
+  // ---------------------------------------------------------------------------
+
+  function icsEscape(text) {
+    return String(text).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+  }
+
+  /** RFC 5545: 한 줄은 75바이트까지. 넘으면 CRLF+공백으로 이어 씁니다(한글이 중간에 잘리지 않게 글자 단위로). */
+  function icsFold(line) {
+    const out = [];
+    let cur = '';
+    let bytes = 0;
+    for (const ch of line) {
+      const size = new TextEncoder().encode(ch).length;
+      const limit = out.length === 0 ? 75 : 74;
+      if (bytes + size > limit) { out.push(cur); cur = ''; bytes = 0; }
+      cur += ch;
+      bytes += size;
+    }
+    out.push(cur);
+    return out.join('\r\n ');
+  }
+
+  function icsDate(key) {
+    return key.replace(/-/g, '');
+  }
+
+  /** 아직 끝나지 않은 일정 중 날짜가 있는 것만 종일 일정으로 만듭니다. */
+  function toICS(tasks, now = new Date()) {
+    const stamp = now.toISOString().replace(/[-:]/g, '').replace(/\.\d+Z$/, 'Z');
+    const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//My Tasks//KO', 'CALSCALE:GREGORIAN', 'X-WR-CALNAME:My Tasks'];
+    let count = 0;
+    for (const task of tasks) {
+      if (task.completed || (!task.start && !task.due)) continue;
+      const { start, end } = taskSpan(task);
+      const category = CATEGORIES.find((c) => c.id === task.category);
+      lines.push('BEGIN:VEVENT', `UID:${task.id}@my-tasks`, `DTSTAMP:${stamp}`,
+        `DTSTART;VALUE=DATE:${icsDate(start)}`,
+        `DTEND;VALUE=DATE:${icsDate(toDateKey(addDays(parseDateKey(end), 1)))}`,
+        `SUMMARY:${icsEscape(task.text)}`,
+        `CATEGORIES:${icsEscape(category.label)}`);
+      if (task.note) lines.push(`DESCRIPTION:${icsEscape(task.note)}`);
+      lines.push('END:VEVENT');
+      count++;
+    }
+    lines.push('END:VCALENDAR');
+    return { text: lines.map(icsFold).join('\r\n') + '\r\n', count };
   }
 
   /** id가 겹치면 뒤에 오는 항목에 새 id를 줍니다. */
@@ -543,9 +647,14 @@
     MAX_IMAGES,
     CATEGORIES,
     SORTS,
+    REPEATS,
     WEEKDAYS,
     categoryIds,
     sortIds,
+    repeatIds,
+    shiftDate,
+    nextOccurrence,
+    toICS,
     toDateKey,
     parseDateKey,
     isValidDateKey,

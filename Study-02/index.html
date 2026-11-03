@@ -229,6 +229,9 @@
           <button type="button" class="text-btn danger" id="clearDoneBtn">
             <svg aria-hidden="true"><use href="#i-trash"/></svg>완료 항목 삭제
           </button>
+          <button type="button" class="text-btn" id="icsBtn" title="진행 중인 일정을 구글·애플 캘린더 등으로 가져갈 수 있는 파일(.ics)로 저장">
+            <svg aria-hidden="true"><use href="#i-calendar"/></svg>캘린더로 내보내기
+          </button>
           <button type="button" class="text-btn" id="exportBtn">
             <svg aria-hidden="true"><use href="#i-download"/></svg>내보내기
           </button>
@@ -274,6 +277,10 @@
         <label class="field date-field">
           <span class="date-prefix">마감</span>
           <input id="detailDue" type="date" aria-label="마감일">
+        </label>
+        <label class="field date-field" title="완료하면 다음 일정이 자동으로 만들어져요. 시작일이나 마감일이 있어야 해요.">
+          <span class="date-prefix">반복</span>
+          <select id="detailRepeat" aria-label="반복"></select>
         </label>
       </div>
 
@@ -341,6 +348,7 @@
           <tr><td><code>#업무</code> <code>#개인</code> <code>#공부</code> <code>#과제</code></td><td>카테고리 (<code>#과제</code>는 공부로)</td></tr>
           <tr><td><code>@오늘</code> <code>@내일</code> <code>@금</code> <code>@10/5</code></td><td>마감일</td></tr>
           <tr><td><code>@10/3~10/7</code> <code>@오늘~금</code></td><td>기간 (시작일~마감일)</td></tr>
+          <tr><td><code>!매일</code> <code>!매주</code> <code>!매월</code></td><td>반복 (완료하면 다음 일정이 자동 생성, 날짜 필요)</td></tr>
         </tbody>
       </table>
       <p class="muted">예) <code>자료구조 과제 #과제 @오늘~10/9</code> → 달력에 오늘부터 9일까지 선으로 표시</p>

@@ -11,17 +11,19 @@
     <!-- 시작 화면 -->
     <section id="screen-start" class="screen">
       <h1>📘 정보처리기사 퀴즈</h1>
-      <p class="lead">필기 5과목에서 과목별 2문제씩, 총 10문제를 풀어 봅니다.</p>
+      <p class="lead">필기 5과목에서 문제를 골고루 뽑아 풀어 봅니다. 문제 수는 5·10·15·25·50개 중에서 고를 수 있습니다.</p>
       <ul class="cat-list" id="cat-list"></ul>
       <form id="start-form" class="start-form">
         <label for="player-name">이름</label>
         <input id="player-name" type="text" maxlength="12" placeholder="순위표에 표시할 이름" autocomplete="off">
         <label for="mode">모드</label>
         <select id="mode"></select>
+        <label for="count" id="count-label">문제 수</label>
+        <select id="count"></select>
         <p id="mode-hint" class="hint"></p>
         <button type="submit" class="btn primary">게임 시작</button>
       </form>
-      <h2>순위표</h2>
+      <h2 id="ranking-title">순위표</h2>
       <ol id="ranking-start" class="ranking"></ol>
       <button id="btn-reset-rank" type="button" class="btn link">순위표 초기화</button>
     </section>
@@ -54,7 +56,7 @@
       <h2>틀린 문제</h2>
       <ul id="result-wrong" class="wrong-list"></ul>
       <div id="ranking-section">
-        <h2>순위표</h2>
+        <h2 id="ranking-result-title">순위표</h2>
         <ol id="ranking-result" class="ranking"></ol>
       </div>
       <button id="btn-retry-wrong" class="btn" hidden>틀린 문제만 다시 풀기</button>
