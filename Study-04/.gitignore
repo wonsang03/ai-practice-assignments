@@ -1,0 +1,21 @@
+# API 키 — 절대 올리지 않는다
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# 테스트용으로 넣어 본 사진
+samples/
+
+# Editors and OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

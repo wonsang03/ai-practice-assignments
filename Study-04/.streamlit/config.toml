@@ -1,0 +1,18 @@
+# 이 앱은 내 API 키로 BAZE 게이트웨이를 호출하므로, 같은 네트워크의 다른 사람이 접속하지 못하게 내 PC(localhost)에서만 연다.
+[server]
+address = "localhost"
+headless = true
+
+[browser]
+gatherUsageStats = false
+
+# 음식 앱이라 따뜻한 주황색을 기본 색으로. 배경색은 정하지 않아 라이트·다크 모드를 모두 따른다.
+[theme]
+primaryColor = "#f97316"
+baseRadius = "0.75rem"
+buttonRadius = "0.75rem"
+showSidebarBorder = true
+# 기본 글꼴(Source Sans)에는 한글이 없어 숫자·영문과 한글 글꼴이 섞여 보이므로, 한글 UI 글꼴 하나로 통일한다.
+# 인터넷이 없으면 맑은 고딕으로 대신 표시된다.
+font = "Pretendard Variable:https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css, Malgun Gothic, Apple SD Gothic Neo, sans-serif"
+headingFont = "Pretendard Variable:https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css, Malgun Gothic, Apple SD Gothic Neo, sans-serif"

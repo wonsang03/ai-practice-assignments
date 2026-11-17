@@ -1,0 +1,11 @@
+# 설치: pip install -r requirements.txt
+
+# 웹 화면 (1단계 재료 인식)
+streamlit>=1.37
+
+# BAZE API 호출과 .env 읽기
+requests>=2.31
+python-dotenv>=1.0
+
+# 큰 사진을 줄여서 보내기
+pillow>=10.0
