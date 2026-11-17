@@ -1,0 +1,6 @@
+# /quiz-daily, node tools/quiz.js backup 이 만드는 문제 은행 백업
+backups/
+
+# 학생이 내보낸 실제 결과 파일은 개인 기록이라 올리지 않는다 (시연용 demo-class.json만 허용)
+data/results/*.json
+!data/results/demo-class.json

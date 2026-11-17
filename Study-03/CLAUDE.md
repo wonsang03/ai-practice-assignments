@@ -5,15 +5,38 @@
 
 ## 구조
 
-- `js/questions.js` — 문제 은행(`QUESTIONS`)과 과목 정의(`CATEGORIES`). 문제 내용은 여기서만 고친다.
-- `js/quiz-core.js` — 화면과 무관한 로직(문제 뽑기, 보기 섞기, 순위 정렬). 테스트 대상.
-- `js/app.js` — 화면 처리와 localStorage 순위 저장.
-- `tests/run.js` — `node tests/run.js`. 문제 데이터 형식과 로직을 검사한다.
+- `js/questions.js` — 문제 은행(`QUESTIONS`), 과목(`CATEGORIES`), 난이도(`DIFFICULTIES`: 1 초급·2 중급·3 상급). 문제 내용은 여기서만 고친다.
+- `js/quiz-core.js` — 화면과 무관한 로직(문제 뽑기, 보기 섞기, 점수·힌트, 순위 정렬, 기록 통계, 중복·최상급 점검). 테스트 대상.
+- `js/app.js` — 화면 처리와 localStorage 저장(순위표 `study03.ranking.v1`, 플레이 기록 `study03.history.v1`, 프로필 `study03.profile.v1`).
+- `tools/quiz.js` — 문제 은행 점검 CLI(stats, range, superlatives, dupes, list, next-id, backup).
+- `tools/teacher.js` — 선생님 모드 CLI. `data/results/*.json`(앱에서 내보낸 기록)으로 `teacher_report.html`, `report_detailed.csv`를 만든다.
+- `tests/run.js` — `node tests/run.js`. 문제 데이터 형식과 로직, 선생님 모드를 검사한다.
+- `.claude/commands/` — 커스텀 명령어(아래 표).
+
+## 커스텀 명령어
+
+숫자(개수·평균·분포)는 **반드시 `tools/` 스크립트 결과를 쓰고** 직접 세거나 추측하지 않는다.
+
+| 명령어 | 하는 일 |
+| --- | --- |
+| `/quiz-validate [과목]` | 최상급 표현 검증 (가이드라인 2) |
+| `/quiz-range <시작> <끝>` | 구간 난이도 평균·편차, 정답 위치 분포 |
+| `/quiz-add <과목> <난이도>` | 가이드라인을 지켜 새 문제 추가 |
+| `/quiz-check` | 전체 형식·중복 검사 + 정답 교차 검증 |
+| `/quiz-stats` | 문제 은행 통계 |
+| `/quiz-leaderboard [모드] [문제 수]` | `data/results/` 기록으로 리더보드 |
+| `/quiz-daily [개수]` | 일일 업데이트(분포 확인 → 백업 → 추가 → 검증 → 리포트), 실패 시 즉시 중단 |
+| `/teacher-dashboard` | 선생님 모드: `/collect-results` → `/create-report` → `/export-report` |
+
+체이닝 예: `/quiz-add 데이터베이스 상급 && /quiz-check && /quiz-stats` — 앞 단계가 실패하면 뒤 단계는 실행하지 않는다.
+명령어 하나의 동작만 바꿀 때는 해당 `.md` 파일(과 그것이 부르는 스크립트 함수)만 고친다.
 
 ## 규칙
 
 - 사용자 입력과 문제 텍스트는 `textContent`로만 화면에 넣는다(`innerHTML` 금지).
 - 문제를 추가·수정한 뒤에는 `node tests/run.js`를 반드시 실행한다.
+- 새 문제에는 `difficulty`(1~3)를 꼭 넣는다. id는 `node tools/quiz.js next-id <과목>`으로 정한다.
+- 학생이 내보낸 실제 결과 파일(`data/results/*.json`)은 개인 기록이므로 커밋하지 않는다(.gitignore). 시연용 `demo-class.json`은 가상 데이터임을 보고서에 표시한다.
 
 ## 문제 검증 가이드라인 (할루시네이션 방지) — 중요
 

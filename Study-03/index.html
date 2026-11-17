@@ -8,10 +8,20 @@
 </head>
 <body>
   <main class="app">
+    <!-- 상단 메뉴 (퀴즈 푸는 중에는 숨김) -->
+    <header id="topbar" class="topbar">
+      <button type="button" class="brand" data-go="start">📘 정보처리기사 퀴즈</button>
+      <nav class="nav" aria-label="메뉴">
+        <button type="button" class="nav-btn" data-go="ranking">🏆 순위</button>
+        <button type="button" class="nav-btn" data-go="stats">📊 통계</button>
+        <button type="button" class="nav-btn" data-go="profile"><span id="nav-avatar">🙂</span> <span id="nav-name">프로필</span></button>
+      </nav>
+    </header>
+
     <!-- 시작 화면 -->
     <section id="screen-start" class="screen">
       <h1>📘 정보처리기사 퀴즈</h1>
-      <p class="lead">필기 5과목에서 문제를 골고루 뽑아 풀어 봅니다. 문제 수는 5·10·15·25·50개 중에서 고를 수 있습니다.</p>
+      <p class="lead">필기 5과목에서 문제를 골고루 뽑아 풀어 봅니다. 모드와 문제 수를 고르고 시작하세요.</p>
       <ul class="cat-list" id="cat-list"></ul>
       <form id="start-form" class="start-form">
         <label for="player-name">이름</label>
@@ -21,25 +31,31 @@
         <label for="count" id="count-label">문제 수</label>
         <select id="count"></select>
         <p id="mode-hint" class="hint"></p>
+        <p class="hint">💡 문제마다 힌트를 한 번 쓸 수 있습니다. 오답 보기 2개를 지워 주는 대신, 맞히면 10점이 아니라 5점만 받습니다.</p>
         <button type="submit" class="btn primary">게임 시작</button>
       </form>
-      <h2 id="ranking-title">순위표</h2>
-      <ol id="ranking-start" class="ranking"></ol>
-      <button id="btn-reset-rank" type="button" class="btn link">순위표 초기화</button>
     </section>
 
     <!-- 퀴즈 화면 -->
     <section id="screen-quiz" class="screen" hidden>
       <div class="quiz-head">
         <span id="quiz-progress">1 / 10</span>
-        <span id="quiz-category" class="badge"></span>
+        <span class="badges">
+          <span id="quiz-category" class="badge"></span>
+          <span id="quiz-difficulty" class="badge level"></span>
+        </span>
         <span id="quiz-time" class="muted" aria-label="경과 시간">0초</span>
         <span id="quiz-score">0점</span>
       </div>
       <div class="bar"><div id="quiz-bar" class="bar-fill"></div></div>
+      <div id="speed-wrap" class="speed" hidden>
+        <div class="bar speed-bar"><div id="speed-bar" class="bar-fill"></div></div>
+        <span id="speed-left" class="speed-left" aria-live="off">15초</span>
+      </div>
       <h2 id="quiz-question" class="question"></h2>
       <pre id="quiz-code" class="code" hidden></pre>
       <ul id="quiz-choices" class="choices"></ul>
+      <button id="btn-hint" type="button" class="btn hint-btn">💡 힌트 — 보기 2개 지우기 (맞히면 5점)</button>
       <div id="quiz-feedback" class="feedback" role="status" aria-live="polite" hidden>
         <strong id="feedback-title"></strong>
         <p id="feedback-text"></p>
@@ -51,6 +67,7 @@
     <section id="screen-result" class="screen" hidden>
       <h1 id="result-title">결과</h1>
       <p id="result-summary" class="big"></p>
+      <ul id="result-chips" class="chips"></ul>
       <h2>과목별 정답</h2>
       <ul id="result-cats" class="cat-list"></ul>
       <h2>틀린 문제</h2>
@@ -60,7 +77,75 @@
         <ol id="ranking-result" class="ranking"></ol>
       </div>
       <button id="btn-retry-wrong" class="btn" hidden>틀린 문제만 다시 풀기</button>
+      <div class="row">
+        <button id="btn-show-ranking" class="btn">🏆 순위 확인</button>
+        <button id="btn-show-stats" class="btn">📊 내 통계</button>
+      </div>
       <button id="btn-retry" class="btn primary">다시 도전</button>
+    </section>
+
+    <!-- 순위표(리더보드) 화면 -->
+    <section id="screen-ranking" class="screen" hidden>
+      <h1>🏆 순위표</h1>
+      <p class="lead">모드와 문제 수가 같은 기록끼리 비교합니다. 점수가 같으면 시간이 짧은 순입니다.</p>
+      <div class="filters">
+        <label>모드
+          <select id="rank-mode">
+            <option value="challenge">도전 모드</option>
+            <option value="speed">스피드 퀴즈</option>
+          </select>
+        </label>
+        <label>문제 수 <select id="rank-count"></select></label>
+      </div>
+      <ol id="ranking-board" class="ranking"></ol>
+      <button id="btn-reset-rank" type="button" class="btn link">순위표 전체 초기화</button>
+    </section>
+
+    <!-- 통계 대시보드 화면 -->
+    <section id="screen-stats" class="screen" hidden>
+      <h1 id="stats-title">📊 내 통계</h1>
+      <p id="stats-lead" class="lead"></p>
+      <div id="stats-empty" class="empty-box" hidden>아직 플레이 기록이 없습니다. 퀴즈를 한 번 풀어 보세요.</div>
+      <div id="stats-body">
+        <div id="stats-tiles" class="tiles"></div>
+        <p id="stats-goal" class="goal"></p>
+        <h2>과목별 누적 정답률</h2>
+        <ul id="stats-cats" class="cat-list"></ul>
+        <h2>난이도별 정답률</h2>
+        <ul id="stats-diff" class="cat-list"></ul>
+        <h2>자주 틀린 문제</h2>
+        <ul id="stats-wrong" class="wrong-list"></ul>
+        <h2>최근 기록</h2>
+        <ul id="stats-recent" class="recent"></ul>
+      </div>
+      <div class="row">
+        <button id="btn-export" type="button" class="btn">⬇️ 기록 내보내기 (JSON)</button>
+        <button id="btn-clear-history" type="button" class="btn">내 기록 삭제</button>
+      </div>
+      <p class="hint">내보낸 JSON 파일을 <code>data/results/</code> 폴더에 모으면 선생님 모드(<code>/teacher-dashboard</code>)가 반 전체 보고서를 만듭니다.</p>
+    </section>
+
+    <!-- 프로필 화면 -->
+    <section id="screen-profile" class="screen" hidden>
+      <h1>🙂 프로필</h1>
+      <p class="lead">이름은 순위표와 통계에 쓰입니다. 통계는 이 브라우저에서 같은 이름으로 푼 기록을 모아 보여 줍니다.</p>
+      <form id="profile-form" class="start-form">
+        <label for="profile-name">이름</label>
+        <input id="profile-name" type="text" maxlength="12" placeholder="이름" autocomplete="off">
+        <fieldset class="avatars">
+          <legend>아바타</legend>
+          <div id="avatar-list" class="avatar-list"></div>
+        </fieldset>
+        <label for="profile-goal">목표 정답률</label>
+        <select id="profile-goal">
+          <option value="60">60% (필기 평균 합격선)</option>
+          <option value="70">70%</option>
+          <option value="80">80%</option>
+          <option value="90">90%</option>
+        </select>
+        <button type="submit" class="btn primary">저장</button>
+        <p id="profile-saved" class="hint" role="status" aria-live="polite"></p>
+      </form>
     </section>
   </main>
 

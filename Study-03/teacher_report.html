@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>선생님 모드 보고서</title>
+<style>
+  :root { --bg:#f4f6fb; --card:#fff; --text:#1c2333; --muted:#5d6679; --line:#d9deea; --accent:#2f5bea; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#12151d; --card:#1b2030; --text:#e8ebf4; --muted:#a0a8bd; --line:#32394f; --accent:#7b9bff; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif; line-height:1.6; }
+  main { max-width:960px; margin:0 auto; padding:28px 16px 56px; }
+  h1 { margin:0 0 4px; } h2 { margin:28px 0 10px; font-size:1.1rem; }
+  .muted, small { color:var(--muted); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px; }
+  .tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:16px; }
+  .tile { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; }
+  .tile b { display:block; font-size:1.5rem; }
+  ul { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+  .cats li { display:flex; flex-wrap:wrap; justify-content:space-between; gap:4px 12px; }
+  .bar { flex-basis:100%; height:6px; background:var(--line); border-radius:3px; overflow:hidden; display:block; }
+  .bar b { display:block; height:100%; background:var(--accent); }
+  .missed li small { display:block; }
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; background:var(--card); font-variant-numeric:tabular-nums; }
+  th, td { padding:9px 10px; border-bottom:1px solid var(--line); text-align:left; white-space:nowrap; }
+  th { font-size:.85rem; color:var(--muted); }
+  .g { display:inline-block; min-width:2.2em; text-align:center; padding:1px 8px; border-radius:999px; font-weight:700; border:1px solid var(--line); }
+  .g-A { color:#17803d; border-color:#17803d; } .g-B { color:var(--accent); border-color:var(--accent); } .g-C { color:#b42318; border-color:#b42318; }
+  .note { font-size:.9rem; color:var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>📋 선생님 모드 — 퀴즈 성적 종합 보고서</h1>
+  <p class="muted">생성: 2026. 11. 17. 오후 4:02:16 · 원본 파일 1개 · 플레이 기록 29건 · ⚠ 시연용 가상 데이터 포함</p>
+  <div class="tiles">
+    <div class="tile"><b>8명</b><span class="muted">학생</span></div>
+    <div class="tile"><b>29회</b><span class="muted">총 플레이</span></div>
+    <div class="tile"><b>290</b><span class="muted">푼 문제</span></div>
+    <div class="tile"><b>66%</b><span class="muted">반 평균 정답률</span></div>
+  </div>
+  <h2>학생별 결과</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>순위</th><th>이름</th><th>등급</th><th>플레이</th><th>푼 문제</th><th>정답률</th><th>최고 점수</th><th>학습 시간</th><th>힌트</th><th>약한 과목</th></tr></thead>
+    <tbody><tr>
+      <td>1</td><td>데모학생01</td><td><span class="g g-A">A</span></td>
+      <td>4</td><td>40</td><td>95%</td><td>111</td>
+      <td>9분 41초</td><td>3</td><td>정보시스템 구축관리</td></tr><tr>
+      <td>2</td><td>데모학생03</td><td><span class="g g-A">A</span></td>
+      <td>3</td><td>30</td><td>80%</td><td>107</td>
+      <td>4분 48초</td><td>5</td><td>정보시스템 구축관리</td></tr><tr>
+      <td>3</td><td>데모학생04</td><td><span class="g g-A">A</span></td>
+      <td>3</td><td>30</td><td>73%</td><td>100</td>
+      <td>5분 24초</td><td>4</td><td>소프트웨어 개발</td></tr><tr>
+      <td>4</td><td>데모학생02</td><td><span class="g g-B">B</span></td>
+      <td>4</td><td>40</td><td>73%</td><td>111</td>
+      <td>6분 58초</td><td>2</td><td>소프트웨어 설계</td></tr><tr>
+      <td>5</td><td>데모학생06</td><td><span class="g g-B">B</span></td>
+      <td>3</td><td>30</td><td>67%</td><td>75</td>
+      <td>6분 11초</td><td>5</td><td>프로그래밍 언어 활용</td></tr><tr>
+      <td>6</td><td>데모학생05</td><td><span class="g g-B">B</span></td>
+      <td>5</td><td>50</td><td>60%</td><td>75</td>
+      <td>12분 17초</td><td>6</td><td>소프트웨어 개발</td></tr><tr>
+      <td>7</td><td>데모학생07</td><td><span class="g g-C">C</span></td>
+      <td>3</td><td>30</td><td>40%</td><td>40</td>
+      <td>6분 36초</td><td>6</td><td>소프트웨어 설계</td></tr><tr>
+      <td>8</td><td>데모학생08</td><td><span class="g g-C">C</span></td>
+      <td>4</td><td>40</td><td>38%</td><td>46</td>
+      <td>7분 34초</td><td>8</td><td>소프트웨어 설계</td></tr></tbody>
+  </table></div>
+  <p class="note">등급은 <b>상대평가</b>입니다. 정답률 순위(같으면 최고 점수 순)로 상위 30% A, 다음 40% B, 나머지 C이며 같은 정답률은 같은 등급입니다. 10문제 미만으로 푼 학생은 '기록 부족'으로 표시합니다. 약한 과목은 2문제 이상 푼 과목 중 정답률이 가장 낮은 과목입니다.</p>
+  <h2>반 전체 과목별 정답률</h2>
+  <div class="card"><ul class="cats"><li><span>소프트웨어 설계</span><span class="muted">36/58 · 62%</span><i class="bar"><b style="width:62.1%"></b></i></li><li><span>소프트웨어 개발</span><span class="muted">35/58 · 60%</span><i class="bar"><b style="width:60.3%"></b></i></li><li><span>데이터베이스 구축</span><span class="muted">46/58 · 79%</span><i class="bar"><b style="width:79.3%"></b></i></li><li><span>프로그래밍 언어 활용</span><span class="muted">38/58 · 66%</span><i class="bar"><b style="width:65.5%"></b></i></li><li><span>정보시스템 구축관리</span><span class="muted">35/58 · 60%</span><i class="bar"><b style="width:60.3%"></b></i></li></ul></div>
+  <h2>반 전체에서 자주 틀린 문제</h2>
+  <div class="card"><ul class="missed"><li><b>p06</b> 다음 Java 코드의 출력 결과는? (문자 &#39;b&#39;의 아스키 코드는 98)<small>6회 틀림 · 정답: 101</small></li><li><b>s09</b> OSI 7계층 중 논리 주소(IP) 지정과 경로 설정(라우팅)을 담당하는 계층은?<small>6회 틀림 · 정답: 네트워크 계층</small></li><li><b>v08</b> 화이트박스 테스트에서, 프로그램의 각 분기(결정) 지점이 참과 거짓의 결과를 모두 한 번 이상 갖도록 테스트 케이스를 설계하는 기준은?<small>5회 틀림 · 정답: 결정(분기) 커버리지</small></li><li><b>b06</b> SQL에서 GROUP BY로 그룹화한 결과에 조건을 지정할 때 사용하는 절은?<small>4회 틀림 · 정답: HAVING</small></li><li><b>d05</b> 모듈의 결합도(Coupling) 중 가장 약한(가장 바람직한) 것은?<small>4회 틀림 · 정답: 자료 결합도</small></li></ul></div>
+</main>
+</body>
+</html>

@@ -1,0 +1,1573 @@
+{
+  "app": "study03-quiz",
+  "version": 1,
+  "demo": true,
+  "exportedAt": "2026-11-03T00:00:00.000Z",
+  "profile": {
+    "name": "시연용 가상 학급"
+  },
+  "history": [
+    {
+      "id": "demo-1-1",
+      "name": "데모학생01",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 9,
+      "score": 90,
+      "seconds": 82,
+      "hints": 0,
+      "timeouts": 0,
+      "date": "2026. 11. 3.",
+      "playedAt": "2026-11-03T00:00:00.000Z",
+      "perCat": {
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "develop": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 7,
+          "correct": 7
+        },
+        "2": {
+          "total": 3,
+          "correct": 2
+        }
+      },
+      "wrongIds": [
+        "s09"
+      ]
+    },
+    {
+      "id": "demo-1-2",
+      "name": "데모학생01",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 9,
+      "score": 90,
+      "seconds": 172,
+      "hints": 0,
+      "timeouts": 0,
+      "date": "2026. 11. 3.",
+      "playedAt": "2026-11-03T12:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        },
+        "develop": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 3,
+          "correct": 3
+        },
+        "2": {
+          "total": 7,
+          "correct": 6
+        }
+      },
+      "wrongIds": [
+        "s06"
+      ]
+    },
+    {
+      "id": "demo-1-3",
+      "name": "데모학생01",
+      "mode": "speed",
+      "category": null,
+      "count": 10,
+      "correct": 10,
+      "score": 111,
+      "seconds": 170,
+      "hints": 2,
+      "timeouts": 0,
+      "date": "2026. 11. 4.",
+      "playedAt": "2026-11-04T00:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 2
+        },
+        "develop": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 4,
+          "correct": 4
+        },
+        "2": {
+          "total": 5,
+          "correct": 5
+        },
+        "3": {
+          "total": 1,
+          "correct": 1
+        }
+      },
+      "wrongIds": []
+    },
+    {
+      "id": "demo-1-4",
+      "name": "데모학생01",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 10,
+      "score": 95,
+      "seconds": 157,
+      "hints": 1,
+      "timeouts": 0,
+      "date": "2026. 11. 4.",
+      "playedAt": "2026-11-04T12:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "develop": {
+          "total": 2,
+          "correct": 2
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 7,
+          "correct": 7
+        },
+        "2": {
+          "total": 2,
+          "correct": 2
+        },
+        "3": {
+          "total": 1,
+          "correct": 1
+        }
+      },
+      "wrongIds": []
+    },
+    {
+      "id": "demo-2-1",
+      "name": "데모학생02",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 5,
+      "score": 50,
+      "seconds": 143,
+      "hints": 0,
+      "timeouts": 0,
+      "date": "2026. 11. 5.",
+      "playedAt": "2026-11-04T18:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 0
+        },
+        "develop": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 0
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 3,
+          "correct": 3
+        },
+        "2": {
+          "total": 6,
+          "correct": 2
+        },
+        "3": {
+          "total": 1,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "d05",
+        "p06",
+        "s09",
+        "d08",
+        "p07"
+      ]
+    },
+    {
+      "id": "demo-2-2",
+      "name": "데모학생02",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 9,
+      "score": 85,
+      "seconds": 99,
+      "hints": 1,
+      "timeouts": 0,
+      "date": "2026. 11. 5.",
+      "playedAt": "2026-11-05T06:00:00.000Z",
+      "perCat": {
+        "system": {
+          "total": 2,
+          "correct": 2
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        },
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 5,
+          "correct": 5
+        },
+        "2": {
+          "total": 5,
+          "correct": 4
+        }
+      },
+      "wrongIds": [
+        "v01"
+      ]
+    },
+    {
+      "id": "demo-2-3",
+      "name": "데모학생02",
+      "mode": "speed",
+      "category": null,
+      "count": 10,
+      "correct": 9,
+      "score": 111,
+      "seconds": 74,
+      "hints": 0,
+      "timeouts": 1,
+      "date": "2026. 11. 6.",
+      "playedAt": "2026-11-05T18:00:00.000Z",
+      "perCat": {
+        "develop": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 1
+        },
+        "system": {
+          "total": 2,
+          "correct": 2
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 6,
+          "correct": 6
+        },
+        "2": {
+          "total": 3,
+          "correct": 2
+        },
+        "3": {
+          "total": 1,
+          "correct": 1
+        }
+      },
+      "wrongIds": [
+        "d05"
+      ]
+    },
+    {
+      "id": "demo-2-4",
+      "name": "데모학생02",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 6,
+      "score": 55,
+      "seconds": 102,
+      "hints": 1,
+      "timeouts": 0,
+      "date": "2026. 11. 6.",
+      "playedAt": "2026-11-06T06:00:00.000Z",
+      "perCat": {
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        },
+        "database": {
+          "total": 2,
+          "correct": 1
+        },
+        "system": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 0
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 3,
+          "correct": 3
+        },
+        "2": {
+          "total": 7,
+          "correct": 3
+        }
+      },
+      "wrongIds": [
+        "b05",
+        "v10",
+        "d05",
+        "d08"
+      ]
+    },
+    {
+      "id": "demo-3-1",
+      "name": "데모학생03",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 7,
+      "score": 45,
+      "seconds": 60,
+      "hints": 5,
+      "timeouts": 0,
+      "date": "2026. 11. 6.",
+      "playedAt": "2026-11-06T12:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 6,
+          "correct": 4
+        },
+        "2": {
+          "total": 3,
+          "correct": 2
+        },
+        "3": {
+          "total": 1,
+          "correct": 1
+        }
+      },
+      "wrongIds": [
+        "v09",
+        "s03",
+        "d01"
+      ]
+    },
+    {
+      "id": "demo-3-2",
+      "name": "데모학생03",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 8,
+      "score": 80,
+      "seconds": 159,
+      "hints": 0,
+      "timeouts": 0,
+      "date": "2026. 11. 7.",
+      "playedAt": "2026-11-07T00:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 6,
+          "correct": 5
+        },
+        "2": {
+          "total": 3,
+          "correct": 3
+        },
+        "3": {
+          "total": 1,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "s07",
+        "v08"
+      ]
+    },
+    {
+      "id": "demo-3-3",
+      "name": "데모학생03",
+      "mode": "speed",
+      "category": null,
+      "count": 10,
+      "correct": 9,
+      "score": 107,
+      "seconds": 69,
+      "hints": 0,
+      "timeouts": 0,
+      "date": "2026. 11. 7.",
+      "playedAt": "2026-11-07T12:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "develop": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 5,
+          "correct": 5
+        },
+        "2": {
+          "total": 4,
+          "correct": 3
+        },
+        "3": {
+          "total": 1,
+          "correct": 1
+        }
+      },
+      "wrongIds": [
+        "s09"
+      ]
+    },
+    {
+      "id": "demo-4-1",
+      "name": "데모학생04",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 6,
+      "score": 55,
+      "seconds": 62,
+      "hints": 1,
+      "timeouts": 0,
+      "date": "2026. 11. 8.",
+      "playedAt": "2026-11-08T06:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        },
+        "system": {
+          "total": 2,
+          "correct": 0
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 4,
+          "correct": 3
+        },
+        "2": {
+          "total": 6,
+          "correct": 3
+        }
+      },
+      "wrongIds": [
+        "v05",
+        "s09",
+        "s06",
+        "p05"
+      ]
+    },
+    {
+      "id": "demo-4-2",
+      "name": "데모학생04",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 8,
+      "score": 70,
+      "seconds": 115,
+      "hints": 2,
+      "timeouts": 0,
+      "date": "2026. 11. 9.",
+      "playedAt": "2026-11-08T18:00:00.000Z",
+      "perCat": {
+        "design": {
+          "total": 2,
+          "correct": 1
+        },
+        "language": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 2
+        },
+        "database": {
+          "total": 2,
+          "correct": 2
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 5,
+          "correct": 5
+        },
+        "2": {
+          "total": 4,
+          "correct": 3
+        },
+        "3": {
+          "total": 1,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "p06",
+        "d06"
+      ]
+    },
+    {
+      "id": "demo-4-3",
+      "name": "데모학생04",
+      "mode": "speed",
+      "category": null,
+      "count": 10,
+      "correct": 8,
+      "score": 100,
+      "seconds": 147,
+      "hints": 1,
+      "timeouts": 1,
+      "date": "2026. 11. 9.",
+      "playedAt": "2026-11-09T06:00:00.000Z",
+      "perCat": {
+        "develop": {
+          "total": 2,
+          "correct": 1
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 2
+        },
+        "database": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 9,
+          "correct": 7
+        },
+        "2": {
+          "total": 1,
+          "correct": 1
+        }
+      },
+      "wrongIds": [
+        "v09",
+        "b09"
+      ]
+    },
+    {
+      "id": "demo-5-1",
+      "name": "데모학생05",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 8,
+      "score": 75,
+      "seconds": 168,
+      "hints": 1,
+      "timeouts": 0,
+      "date": "2026. 11. 10.",
+      "playedAt": "2026-11-10T00:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        },
+        "develop": {
+          "total": 2,
+          "correct": 0
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 3,
+          "correct": 3
+        },
+        "2": {
+          "total": 6,
+          "correct": 5
+        },
+        "3": {
+          "total": 1,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "v01",
+        "v04"
+      ]
+    },
+    {
+      "id": "demo-5-2",
+      "name": "데모학생05",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 5,
+      "score": 40,
+      "seconds": 174,
+      "hints": 2,
+      "timeouts": 0,
+      "date": "2026. 11. 10.",
+      "playedAt": "2026-11-10T12:00:00.000Z",
+      "perCat": {
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 0
+        },
+        "database": {
+          "total": 2,
+          "correct": 1
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 6,
+          "correct": 3
+        },
+        "2": {
+          "total": 2,
+          "correct": 1
+        },
+        "3": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "wrongIds": [
+        "d03",
+        "b02",
+        "s08",
+        "v04",
+        "d07"
+      ]
+    },
+    {
+      "id": "demo-5-3",
+      "name": "데모학생05",
+      "mode": "speed",
+      "category": null,
+      "count": 10,
+      "correct": 5,
+      "score": 52,
+      "seconds": 140,
+      "hints": 2,
+      "timeouts": 3,
+      "date": "2026. 11. 11.",
+      "playedAt": "2026-11-11T00:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 1
+        },
+        "design": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 0
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 4,
+          "correct": 2
+        },
+        "2": {
+          "total": 5,
+          "correct": 3
+        },
+        "3": {
+          "total": 1,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "v08",
+        "p07",
+        "d04",
+        "s02",
+        "v07"
+      ]
+    },
+    {
+      "id": "demo-5-4",
+      "name": "데모학생05",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 6,
+      "score": 60,
+      "seconds": 154,
+      "hints": 0,
+      "timeouts": 0,
+      "date": "2026. 11. 11.",
+      "playedAt": "2026-11-11T12:00:00.000Z",
+      "perCat": {
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 0
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        },
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 3,
+          "correct": 2
+        },
+        "2": {
+          "total": 4,
+          "correct": 4
+        },
+        "3": {
+          "total": 3,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "s07",
+        "v04",
+        "p06",
+        "v08"
+      ]
+    },
+    {
+      "id": "demo-5-5",
+      "name": "데모학생05",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 6,
+      "score": 55,
+      "seconds": 101,
+      "hints": 1,
+      "timeouts": 0,
+      "date": "2026. 11. 12.",
+      "playedAt": "2026-11-12T00:00:00.000Z",
+      "perCat": {
+        "develop": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 1
+        },
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 1
+        },
+        "system": {
+          "total": 2,
+          "correct": 0
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 4,
+          "correct": 3
+        },
+        "2": {
+          "total": 5,
+          "correct": 2
+        },
+        "3": {
+          "total": 1,
+          "correct": 1
+        }
+      },
+      "wrongIds": [
+        "p05",
+        "d05",
+        "s09",
+        "s02"
+      ]
+    },
+    {
+      "id": "demo-6-1",
+      "name": "데모학생06",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 7,
+      "score": 65,
+      "seconds": 92,
+      "hints": 1,
+      "timeouts": 0,
+      "date": "2026. 11. 12.",
+      "playedAt": "2026-11-11T18:00:00.000Z",
+      "perCat": {
+        "design": {
+          "total": 2,
+          "correct": 1
+        },
+        "database": {
+          "total": 2,
+          "correct": 1
+        },
+        "language": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 2
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 6,
+          "correct": 4
+        },
+        "2": {
+          "total": 4,
+          "correct": 3
+        }
+      },
+      "wrongIds": [
+        "d09",
+        "b06",
+        "p10"
+      ]
+    },
+    {
+      "id": "demo-6-2",
+      "name": "데모학생06",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 6,
+      "score": 50,
+      "seconds": 101,
+      "hints": 2,
+      "timeouts": 0,
+      "date": "2026. 11. 12.",
+      "playedAt": "2026-11-12T06:00:00.000Z",
+      "perCat": {
+        "design": {
+          "total": 2,
+          "correct": 2
+        },
+        "database": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        },
+        "system": {
+          "total": 2,
+          "correct": 2
+        },
+        "language": {
+          "total": 2,
+          "correct": 0
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 3,
+          "correct": 3
+        },
+        "2": {
+          "total": 7,
+          "correct": 3
+        }
+      },
+      "wrongIds": [
+        "b05",
+        "v03",
+        "p08",
+        "p05"
+      ]
+    },
+    {
+      "id": "demo-6-3",
+      "name": "데모학생06",
+      "mode": "speed",
+      "category": null,
+      "count": 10,
+      "correct": 7,
+      "score": 75,
+      "seconds": 178,
+      "hints": 2,
+      "timeouts": 0,
+      "date": "2026. 11. 13.",
+      "playedAt": "2026-11-12T18:00:00.000Z",
+      "perCat": {
+        "language": {
+          "total": 2,
+          "correct": 1
+        },
+        "database": {
+          "total": 2,
+          "correct": 1
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 2
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 4,
+          "correct": 2
+        },
+        "2": {
+          "total": 5,
+          "correct": 4
+        },
+        "3": {
+          "total": 1,
+          "correct": 1
+        }
+      },
+      "wrongIds": [
+        "p08",
+        "b08",
+        "s07"
+      ]
+    },
+    {
+      "id": "demo-7-1",
+      "name": "데모학생07",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 4,
+      "score": 40,
+      "seconds": 176,
+      "hints": 2,
+      "timeouts": 0,
+      "date": "2026. 11. 13.",
+      "playedAt": "2026-11-13T12:00:00.000Z",
+      "perCat": {
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 0
+        },
+        "language": {
+          "total": 2,
+          "correct": 0
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 4,
+          "correct": 3
+        },
+        "2": {
+          "total": 5,
+          "correct": 1
+        },
+        "3": {
+          "total": 1,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "s06",
+        "d06",
+        "p04",
+        "p06",
+        "d02",
+        "v07"
+      ]
+    },
+    {
+      "id": "demo-7-2",
+      "name": "데모학생07",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 5,
+      "score": 35,
+      "seconds": 117,
+      "hints": 4,
+      "timeouts": 0,
+      "date": "2026. 11. 14.",
+      "playedAt": "2026-11-14T00:00:00.000Z",
+      "perCat": {
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        },
+        "design": {
+          "total": 2,
+          "correct": 1
+        },
+        "language": {
+          "total": 2,
+          "correct": 1
+        },
+        "database": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 4,
+          "correct": 3
+        },
+        "2": {
+          "total": 6,
+          "correct": 2
+        }
+      },
+      "wrongIds": [
+        "b02",
+        "d06",
+        "p05",
+        "s09",
+        "v06"
+      ]
+    },
+    {
+      "id": "demo-7-3",
+      "name": "데모학생07",
+      "mode": "speed",
+      "category": null,
+      "count": 10,
+      "correct": 3,
+      "score": 34,
+      "seconds": 103,
+      "hints": 0,
+      "timeouts": 2,
+      "date": "2026. 11. 14.",
+      "playedAt": "2026-11-14T12:00:00.000Z",
+      "perCat": {
+        "language": {
+          "total": 2,
+          "correct": 2
+        },
+        "develop": {
+          "total": 2,
+          "correct": 0
+        },
+        "system": {
+          "total": 2,
+          "correct": 0
+        },
+        "database": {
+          "total": 2,
+          "correct": 0
+        },
+        "design": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 4,
+          "correct": 2
+        },
+        "2": {
+          "total": 6,
+          "correct": 1
+        }
+      },
+      "wrongIds": [
+        "v02",
+        "s05",
+        "b05",
+        "s08",
+        "b06",
+        "v03",
+        "d06"
+      ]
+    },
+    {
+      "id": "demo-8-1",
+      "name": "데모학생08",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 4,
+      "score": 35,
+      "seconds": 149,
+      "hints": 1,
+      "timeouts": 0,
+      "date": "2026. 11. 15.",
+      "playedAt": "2026-11-15T06:00:00.000Z",
+      "perCat": {
+        "develop": {
+          "total": 2,
+          "correct": 1
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "language": {
+          "total": 2,
+          "correct": 0
+        },
+        "database": {
+          "total": 2,
+          "correct": 1
+        },
+        "design": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 6,
+          "correct": 2
+        },
+        "2": {
+          "total": 2,
+          "correct": 2
+        },
+        "3": {
+          "total": 2,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "v08",
+        "s03",
+        "p06",
+        "b06",
+        "d10",
+        "p09"
+      ]
+    },
+    {
+      "id": "demo-8-2",
+      "name": "데모학생08",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 1,
+      "score": 10,
+      "seconds": 105,
+      "hints": 1,
+      "timeouts": 0,
+      "date": "2026. 11. 16.",
+      "playedAt": "2026-11-15T18:00:00.000Z",
+      "perCat": {
+        "language": {
+          "total": 2,
+          "correct": 0
+        },
+        "database": {
+          "total": 2,
+          "correct": 0
+        },
+        "system": {
+          "total": 2,
+          "correct": 0
+        },
+        "design": {
+          "total": 2,
+          "correct": 0
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 5,
+          "correct": 1
+        },
+        "2": {
+          "total": 5,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "p07",
+        "b06",
+        "b09",
+        "s06",
+        "d10",
+        "d04",
+        "v03",
+        "s05",
+        "p01"
+      ]
+    },
+    {
+      "id": "demo-8-3",
+      "name": "데모학생08",
+      "mode": "speed",
+      "category": null,
+      "count": 10,
+      "correct": 5,
+      "score": 46,
+      "seconds": 133,
+      "hints": 3,
+      "timeouts": 2,
+      "date": "2026. 11. 16.",
+      "playedAt": "2026-11-16T06:00:00.000Z",
+      "perCat": {
+        "design": {
+          "total": 2,
+          "correct": 1
+        },
+        "language": {
+          "total": 2,
+          "correct": 1
+        },
+        "develop": {
+          "total": 2,
+          "correct": 0
+        },
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 5,
+          "correct": 3
+        },
+        "2": {
+          "total": 3,
+          "correct": 2
+        },
+        "3": {
+          "total": 2,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "p06",
+        "v07",
+        "s02",
+        "d02",
+        "v04"
+      ]
+    },
+    {
+      "id": "demo-8-4",
+      "name": "데모학생08",
+      "mode": "challenge",
+      "category": null,
+      "count": 10,
+      "correct": 5,
+      "score": 35,
+      "seconds": 67,
+      "hints": 3,
+      "timeouts": 0,
+      "date": "2026. 11. 17.",
+      "playedAt": "2026-11-16T18:00:00.000Z",
+      "perCat": {
+        "database": {
+          "total": 2,
+          "correct": 2
+        },
+        "design": {
+          "total": 2,
+          "correct": 0
+        },
+        "develop": {
+          "total": 2,
+          "correct": 1
+        },
+        "system": {
+          "total": 2,
+          "correct": 1
+        },
+        "language": {
+          "total": 2,
+          "correct": 1
+        }
+      },
+      "perDiff": {
+        "1": {
+          "total": 4,
+          "correct": 2
+        },
+        "2": {
+          "total": 5,
+          "correct": 3
+        },
+        "3": {
+          "total": 1,
+          "correct": 0
+        }
+      },
+      "wrongIds": [
+        "d10",
+        "d03",
+        "s05",
+        "p10",
+        "v08"
+      ]
+    }
+  ]
+}
